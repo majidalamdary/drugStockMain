@@ -1,0 +1,365 @@
+﻿@model DrugStockWeb.ViewModels.BusinnessPartner.CreateBusinnessPartnerViewModel
+@using DrugStockWeb.Models.Constanct
+@using DrugStockWeb.Utitlities
+@{
+    ViewBag.Title = "ایجاد طرف حساب جدید";
+}
+@using (Html.BeginForm("CreateBusinnessPartner", "BusinnessPartner", FormMethod.Post, new { role = "form", @class = "form-horizontal", autocomplete = "off", id = "CreateStoreForm", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(p => p.Id)
+    <style>
+        .required:before {
+            content: "* ";
+            color: red;
+        }
+    </style>
+    <div class="panel panel-default">
+
+
+
+        <div class="panel-heading">
+            <div class="row">
+
+                <div class="col-md-12">
+
+                    <table class="model-state">
+                        @foreach (var item in ViewContext.ViewData.ModelState)
+                        {
+                            if (item.Value.Errors.Any())
+                            {
+                                <tr>
+                                    @if (@item.Key == "public")
+                                    {
+                                        <td>
+                                            <div class="alert alert-danger  margin-bottom-0"
+                                                 style="margin-bottom: 5px;">
+                                                @(string.Join("; ", item.Value.Errors.Select(x => x.ErrorMessage)))
+                                            </div>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        }
+                    </table>
+
+                    <br>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="panel-body">
+            <div class="tab-content">
+                <div class="tab-pane active" id="baseInfo">
+                    <div class="row" style="margin-top: 15px; padding-right: 30px;">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(p => p.BusinnessPartnerGroupId, new { @class = "control-label col-md-4  " })
+                                    <div>
+                                        @Html.DropDownListFor(p => p.BusinnessPartnerGroupId, Model.BusinnessPartnerGroupList, "انتخاب کنید", new { @onchange = "ChangeBusinnessPartnerGroup()", @id = "DropDownBusinnessPartnerGroup", @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.BusinnessPartnerGroupId, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row" id="baseInputs" style="display: none">
+                            <ul class="nav nav-tabs" style="margin-bottom: 30px;">
+                                <li class="active">
+                                    <a href="#baseInfo" id="baseInfoTitle" style="color: darkblue" data-toggle="tab">اطلاعات بیمار</a>
+                                </li>
+                            </ul>
+                            <div class="row" id="rowCompany" style="display: none">
+                                <div class="col-md-6">
+                                    <div class="form-group ">
+                                        @Html.LabelFor(p => p.CompanyName, new { @class = "control-label col-md-3 required" })
+
+                                        <div>
+                                            @Html.TextBoxFor(p => p.CompanyName, new { @class = "form-control " })
+                                            @Html.ValidationMessageFor(p => p.CompanyName, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group ">
+                                        @Html.LabelFor(p => p.FirstName, new { @class = "control-label col-md-3  required", id ="lblFirstName" })
+                                        <div>
+                                            @Html.TextBoxFor(p => p.FirstName, new { @class = "form-control " })
+                                            @Html.ValidationMessageFor(p => p.FirstName, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group ">
+                                        @Html.LabelFor(p => p.LastName, new { @class = "control-label col-md-3  required", id = "lblLastName" })
+                                        <div>
+                                            @Html.TextBoxFor(p => p.LastName, new { @class = "form-control " })
+                                            @Html.ValidationMessageFor(p => p.LastName, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group ">
+                                        @Html.LabelFor(p => p.FatherName, new { @class = "control-label col-md-3  ", id = "lblFatherName" })
+                                        <div>
+                                            @Html.TextBoxFor(p => p.FatherName, new { @class = "form-control " })
+                                            @Html.ValidationMessageFor(p => p.FatherName, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group ">
+                                        @Html.LabelFor(p => p.Telphone, new { @class = "control-label col-md-3  ", id = "lblTelphone" })
+                                        <div>
+                                            @Html.TextBoxFor(p => p.Telphone, new { @class = "form-control " })
+                                            @Html.ValidationMessageFor(p => p.Telphone, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group ">
+                                        @Html.LabelFor(p => p.Mobile, new { @class = "control-label col-md-3  ", id = "lblMobile" })
+                                        <div>
+                                            @Html.TextBoxFor(p => p.Mobile, new { @class = "form-control " })
+                                            @Html.ValidationMessageFor(p => p.Mobile, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group ">
+                                        @Html.LabelFor(p => p.MelliCode, new { @class = "control-label col-md-3  ", id = "lblMelliCode" })
+                                        <div>
+                                            @Html.TextBoxFor(p => p.MelliCode, new { @class = "form-control " })
+                                            @Html.ValidationMessageFor(p => p.MelliCode, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group ">
+                                        @Html.LabelFor(p => p.BirthdateShamsi, new { @class = "control-label col-md-3  ", id = "lblBirthdate" })
+                                        <div>
+                                            @Html.TextBoxFor(p => p.BirthdateShamsi, new { @class = "form-control " })
+                                            @Html.ValidationMessageFor(p => p.BirthdateShamsi, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group ">
+                                        @Html.LabelFor(p => p.PostalCode, new { @class = "control-label col-md-3  ", id = "lblPostalCode" })
+                                        <div>
+                                            @Html.TextBoxFor(p => p.PostalCode, new { @class = "form-control " })
+                                            @Html.ValidationMessageFor(p => p.PostalCode, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group ">
+                                        @Html.LabelFor(p => p.Address, new { @class = "control-label col-md-3  ", id = "lblAddress" })
+                                        <div>
+                                            @Html.TextBoxFor(p => p.Address, new { @class = "form-control " })
+                                            @Html.ValidationMessageFor(p => p.Address, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" id="divEconomicalCode">
+                                    <div class="form-group ">
+                                        @Html.LabelFor(p => p.EconomicalCode, new { @class = "control-label col-md-3  ", id = "lblEconomicalCode" })
+                                        <div>
+                                            @Html.TextBoxFor(p => p.EconomicalCode, new { @class = "form-control " })
+                                            @Html.ValidationMessageFor(p => p.EconomicalCode, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" id="hamrahInputs" style="display: none">
+                            <ul class="nav nav-tabs" style="margin-bottom: 30px;">
+                                <li class="active">
+                                    <a href="#baseInfo" style="color: darkblue" data-toggle="tab">اطلاعات همراه بیمار</a>
+                                </li>
+                            </ul>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group ">
+                                        @Html.LabelFor(p => p.HamrahFirstName, new { @class = "control-label col-md-3  required", id = "lblHamrahFirstName" })
+                                        <div>
+                                            @Html.TextBoxFor(p => p.HamrahFirstName, new { @class = "form-control " })
+                                            @Html.ValidationMessageFor(p => p.HamrahFirstName, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group ">
+                                        @Html.LabelFor(p => p.HamrahLastName, new { @class = "control-label col-md-3  required", id = "lblHamrahLastName" })
+                                        <div>
+                                            @Html.TextBoxFor(p => p.HamrahLastName, new { @class = "form-control " })
+                                            @Html.ValidationMessageFor(p => p.HamrahLastName, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group ">
+                                        @Html.LabelFor(p => p.HamrahFatherName, new { @class = "control-label col-md-3  ", id = "lblHamrahFatherName" })
+                                        <div>
+                                            @Html.TextBoxFor(p => p.HamrahFatherName, new { @class = "form-control " })
+                                            @Html.ValidationMessageFor(p => p.HamrahFatherName, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group ">
+                                        @Html.LabelFor(p => p.HamrahTel, new { @class = "control-label col-md-3  required", id = "lblHamrahTel" })
+                                        <div>
+                                            @Html.TextBoxFor(p => p.HamrahTel, new { @class = "form-control " })
+                                            @Html.ValidationMessageFor(p => p.HamrahTel, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group ">
+                                        @Html.LabelFor(p => p.HamrahMobile, new { @class = "control-label col-md-3 required ", id = "lblHamrahMobile" })
+                                        <div>
+                                            @Html.TextBoxFor(p => p.HamrahMobile, new { @class = "form-control " })
+                                            @Html.ValidationMessageFor(p => p.HamrahMobile, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group ">
+                                        @Html.LabelFor(p => p.HamrahMelliCode, new { @class = "control-label col-md-3 required ",  id = "lblHamrahMelliCode" })
+                                        <div>
+                                            @Html.TextBoxFor(p => p.HamrahMelliCode, new { @class = "form-control " })
+                                            @Html.ValidationMessageFor(p => p.HamrahMelliCode, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group ">
+                                        @Html.LabelFor(p => p.HamrahBirthDateShamsi, new { @class = "control-label col-md-3  ", id = "lblHamrahBirthDate" })
+                                        <div>
+                                            @Html.TextBoxFor(p => p.HamrahBirthDateShamsi, new { @class = "form-control " })
+                                            @Html.ValidationMessageFor(p => p.HamrahBirthDateShamsi, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group ">
+                                        @Html.LabelFor(p => p.HamrahAddress, new { @class = "control-label col-md-3  required", id = "lblHamrahAddress" })
+                                        <div>
+                                            @Html.TextBoxFor(p => p.HamrahAddress, new { @class = "form-control " })
+                                            @Html.ValidationMessageFor(p => p.HamrahAddress, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="panel-footer">
+            <div style="float: right !important; margin-right: 40px;">
+                @* ReSharper disable once UnknownCssClass *@
+                <button type="submit" autocomplete="off" onclick="AjaxForm.CustomSubmit(this, 'CreateVehicleForm')" data-loading-text="در حال ارسال اطلاعات" class="btn btn-success btn-md">
+                    ذخیره
+                </button>
+                @* ReSharper disable once UnknownCssClass *@
+                <a href="@Url.Action("Index", "Home")" class="btn btn-primary btn-md">انصراف</a>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <script language="javascript">
+        function ChangeBusinnessPartnerGroup() {
+            var stateId = $('#DropDownBusinnessPartnerGroup').val();
+            if (stateId) {
+                $.ajax({
+                    url: '/BusinnessPartner/GetBusinnessPartnerGroupLegalType',
+                    type: "Post",
+                    dataType: "JSON",
+                    data: { id: stateId },
+                    success: function (res) {
+                        $("#lblFirstName").removeClass('required');
+                        $("#lblMelliCode").removeClass('required');
+                        $("#lblMobile").removeClass('required');
+                        $("#lblBirthdate").removeClass('required');
+
+                        if (res === @BusinnessPartnerLegalTypeValues.Haghighi) {
+                            $("#baseInputs").css("display", "block");
+                            $("#hamrahInputs").css("display", "block");
+                            $("#divEconomicalCode").css("display", "none");
+                            $("#rowCompany").css("display", "none");
+                            $("#baseInfoTitle").html("اطلاعات بیمار");
+                            $("#lblMelliCode").addClass('required');
+                            $("#lblMobile").addClass('required');
+                            $("#lblBirthdate").addClass('required');
+                            $("#lblAddress").addClass('required');
+
+
+                        } else if (res === @BusinnessPartnerLegalTypeValues.Hoghughi || res === @BusinnessPartnerLegalTypeValues.Dolati) {
+                            $("#baseInputs").css("display", "block");
+                            $("#divEconomicalCode").css("display", "block");
+                            $("#hamrahInputs").css("display", "none");
+                            $("#rowCompany").css("display", "block");
+                            $("#lblMelliCode").addClass('required');
+                            $("#lblMobile").addClass('required');
+
+                            $("#baseInfoTitle").html("اطلاعات مرکز و نماینده ");
+
+                        }
+                        $("#lblFirstName").addClass('required');
+                    }
+                });
+            } else {
+            }
+        }
+
+        $("#BirthdateShamsi").persianDatepicker({
+            formatDate: "YYYY/MM/DD",
+            cellWidth: 40,
+            cellHeight: 40,
+            fontSize: 12,
+            selectedBefore: 1,
+            selectedDate: "@Model.BirthdateShamsi"
+        });
+        $("#HamrahBirthdateShamsi").persianDatepicker({
+            formatDate: "YYYY/MM/DD",
+            cellWidth: 40,
+            cellHeight: 40,
+            fontSize: 12,
+            selectedBefore: 1,
+            selectedDate : "@Model.HamrahBirthDateShamsi"
+        });
+
+
+
+                ChangeBusinnessPartnerGroup();
+
+
+
+    </script>
+}
+

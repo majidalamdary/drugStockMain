@@ -1,0 +1,103 @@
+﻿@using DrugStockWeb.Helper
+@model List<Microsoft.AspNet.Identity.EntityFramework.IdentityRole>
+
+@{
+    ViewBag.Title = "لیست نقش ها";
+
+}
+<!-- Modal -->
+<div class="modal fade" id="DeleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                آیا مطمئن هستید؟
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">بستن</button>
+                <button type="button" class="btn btn-primary" id="confirmDelete">بله حتما</button>
+            </div>
+        </div>
+    </div>
+</div>
+@* <button type="button" data-modal- class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"> *@
+@*     Launch demo modal *@
+@* </button> *@
+@* <button type="button" class="btn btn-danger"  data-toggle="modal" data-target="#DeleteConfirmationModal" *@
+@* onclick="confirmDeleteModal('10')">Delete Item id 10</button> *@
+
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <a href="@Url.Action("CreateRole")" class="btn btn-success" style="width: 250px; margin: 20px;"><li class="fa fa-plus-circle" style="margin-left: 5px;"> </li>ایجاد نقش جدید</a>
+                <div class="card-header bg-primary" style="text-align: center">
+                    <h3 class="card-title text-white">لیست نقش ها</h3>
+                </div>
+
+                <div id="ManufactureList">
+                    <div class="card-body p-0">
+                        <table class="table table-striped table-responsive-sm text-center">
+                            <thead>
+                                <tr>
+                                    <th>عنوان نقش</th>
+                                    <th>عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+
+                                        <td>@(item.Name)</td>
+                                        <td>
+                                            <div>
+                                                @if (item.Id != Define.SuperAdminRoleId)
+                                                {
+                                                    <a href="@Url.Action("CreateRole/" + item.Id)" class="btn btn-success shadow btn-xs sharp mr-1" style="width: 80px;"> ویرایش <i class="fa fa-edit" style="cursor: pointer; color: white"></i></a>
+                                                }
+                                                <a href="@Url.Action("CreatePermission/" + item.Id)" class="btn btn-dark shadow btn-xs sharp mr-1 " style="width: 80px;"> مجوز ها <i class="fa fa-list" style="cursor: pointer; color: white"></i></a>
+                                                @if (item.Id != Define.SuperAdminRoleId)
+                                                {
+                                                    <a data-toggle="modal" data-target="#DeleteConfirmationModal" onclick="confirmDeleteModalRole('@item.Id')" class="btn btn-danger shadow btn-xs sharp" style="width: 80px;"> حذف <i style="color: #fff; cursor: pointer" class="fa fa-trash"></i></a>
+                                                }
+                                                @* <a data-modal- class="btn btn-primary" data-toggle="modal" data-target="#DeleteConfimationModal" data-attr="http://127.0.0.1:8000/admin2/driver/delete/106" class="btn btn-danger shadow btn-xs sharp"><i style="color: #fff; cursor: pointer" class="fa fa-trash"></i></a> *@
+
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+
+                    </div>
+
+                </div>
+
+                <!-- /.card-body -->
+
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+    <!-- /.row (main row) -->
+</div>
+
+<div>
+
+</div>
+@* <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script> *@
+
+
+
+@{
+    Html.RenderPartial("_sweetAlert");
+}

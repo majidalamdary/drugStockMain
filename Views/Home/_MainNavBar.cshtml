@@ -1,0 +1,101 @@
+﻿
+<div class="navbar navbar-default header-highlight" style="background-color: #d2d7d9;">
+    <div class="navbar-header">
+        <a class="navbar-brand" href="@Url.Action("Index", "Home")">
+            @*<img src="~/Content/images/logo_light.png" alt="">*@
+            <span style="color: antiquewhite;">پنل کاربری</span>
+        </a>
+        <ul class="nav navbar-nav visible-xs-block">
+            <li><a data-toggle="collapse" data-target="#navbar-mobile"><i class="icon-tree5"></i></a></li>
+            <li><a class="sidebar-mobile-main-toggle"><i class="icon-paragraph-justify3"></i></a></li>
+        </ul>
+    </div>
+    <div class="navbar-collapse collapse" id="navbar-mobile">
+        <ul class="nav navbar-nav">
+            <li><a class="sidebar-control sidebar-main-toggle hidden-xs"><i class="icon-paragraph-justify3"></i></a></li>
+
+        </ul>
+        <p class="navbar-text">
+            @*<span class="label bg-success">Online</span>*@
+        </p>
+        <ul class="nav navbar-nav navbar-right">
+            @if ( User.IsInRole("دفتر") || User.IsInRole("صاحب بار") || true)
+            {
+                <li> تست
+                    @* <a href="@Url.Action("ListNotification", "Notification")" class="dropdown-toggle"> *@
+
+                    @*     @if (Model.NotificationCount > 0) *@
+                    @*     { *@
+                    @*         <span style="float: left;" class="badge badge-pill bg-blue ml-auto"> *@
+                    @*             @Model.NotificationCount *@
+                    @*         </span> *@
+                    @* *@
+                    @*         <i class="icon-comments " style="font-size: x-large;color: green"></i> *@
+                    @*     } *@
+                    @*     else *@
+                    @*     { *@
+                    @*         <i class="icon-comments " style="font-size: x-large;color: grey"></i> *@
+                    @* *@
+                    @*     } *@
+                    @* </a> *@
+                </li>
+            }
+            @* <li class="dropdown dropdown-user"> *@
+            @*     <a class="dropdown-toggle" data-toggle="dropdown"> *@
+            @*         @if (Model.OfficeLogoSrc.HasValue()) *@
+            @*         { *@
+            @*             <img src="~/Content/images/OfficeLogoes/@Model.OfficeLogoSrc" alt=""> *@
+            @*         } *@
+            @*         else *@
+            @*         { *@
+            @*             <img src="~/assets/images/demo/users/man.png" alt=""> *@
+            @*         } *@
+            @*         <span>@Model.OfficeName </span> *@
+            @*         @if (User.IsInRole("صاحب بار") || User.IsInRole("دفتر")) *@
+            @*         { *@
+            @*             <span> مانده کیف پول: <label id="lblnCredit">@Model.Credit</label> </span> *@
+            @*         } *@
+            @*         else *@
+            @*         { *@
+            @*             <label id="lblnCredit" style="display: none"></label> *@
+            @*         } *@
+            @*         $1$ @if (User.IsInRole("دفتر")) #1# *@
+            @*         $1$ { #1# *@
+            @*         $1$     <span> مانده اعتبار: @Model.CreditOffice روز</span> #1# *@
+            @*         $1$ } #1# *@
+            @*         <i class="caret"></i> *@
+            @*     </a> *@
+            @*     <ul class="dropdown-menu dropdown-menu-right"> *@
+            @*         @if (!User.IsInRole("مدیر") && !User.IsInRole("اپراتور") && !User.IsInRole("صاحب بار")) *@
+            @*         { *@
+            @*             <li><a href="@Url.Action("ProfileInfo", "Office", new {id = Model.UserId})"><i class="icon-user-plus"></i>پروفایل من</a></li> *@
+            @*             <li class="divider"></li> *@
+            @*         } *@
+            @*         @if (User.IsInRole("صاحب بار")) *@
+            @*         { *@
+            @*             <li><a href="@Url.Action("EditProfile", "PayloadOwnerMajor", new {id = Model.UserId})"><i class="icon-user-plus"></i>پروفایل من</a></li> *@
+            @*             <li class="divider"></li> *@
+            @*         } *@
+            @* *@
+            @* *@
+            @* *@
+            @*         $1$<li><a href="@Url.Action("Edit", "Office", new {id = ViewBag.Id})"><i class="icon-user-plus"></i>پروفایل من</a></li>#1# *@
+            @*         $1$<li><a href="#"><i class="icon-coins"></i>موجودی</a></li>#1# *@
+            @*         $1$<li><a href="#"><span class="badge bg-teal-400 pull-right">58</span> <i class="icon-comment-discussion"></i> پیام ها</a></li>#1# *@
+            @* *@
+            @*         $1$<li><a href="#"><i class="icon-cog5"></i>تنظیمات</a></li>#1# *@
+            @*         $1$ @if (!User.IsInRole("ادمین اعلام بار")) #1# *@
+            @*         $1$ { #1# *@
+            @*         $1$     <li><a href="@Url.Action("DownloadDocumentation", "Home")"><i class="icon-user-plus"></i>دریافت مستند</a></li> #1# *@
+            @*         $1$     <li class="divider"></li> #1# *@
+            @*         $1$ } #1# *@
+            @*         <li><a href="@Url.Action("LogOff", "Account")"><i class="icon-switch2"></i> خروج</a></li> *@
+            @*     </ul> *@
+            @* </li> *@
+            @* *@
+            @* *@
+            @* *@
+
+        </ul>
+    </div>
+</div>

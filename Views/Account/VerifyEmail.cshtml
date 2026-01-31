@@ -1,0 +1,104 @@
+﻿@using DrugStockWeb.Models.Constancts
+@model DrugStockWeb.ViewModels.Account.EmailVerifyViewModel
+
+@{
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+    ViewBag.Title = "احراز هویت دومرحله ای";
+}
+--@ViewBag.verifyCode---
+<div class="limiter" style="direction: rtl">
+    <div class="container-login100" style="background-image: url('../../Content/Account/images/bg-02.jpg');">
+        <div class="wrap-login100 p-l-110 p-r-110 p-t-62 p-b-33" style="font-family: tahoma">
+            @using (Html.BeginForm("VerifyEmail", "Account", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.VerifyCode, "کد تایید")
+                    @Html.TextBoxFor(m => m.VerifyCode, new { @class = "form-control", maxlength = "6", placeholder = "کد را وارد کنید" })
+                    @Html.ValidationMessageFor(m => m.VerifyCode, "", new { @style = "color:red" })
+                </div>
+                <div class="p-t-13 p-b-9">
+                    <span class="txt1">کد امنیتی</span>
+                </div>
+                <div class="wrap-input100 validate-input">
+                    <img src="@Url.Action("CaptchaImage", "Account")" alt="Captcha" style="border:1px solid #ccc;" />
+                    @Html.TextBox("CaptchaCode", null, new { @class = "form-control", placeholder = "کد بالا را وارد کنید" })
+                    @Html.ValidationMessage("CaptchaCode", "", new { @style = "color:red" })
+                </div>
+
+                <div class="form-group">
+                    <span id="timer" style="font-weight:bold; color:red;"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="submitBtn">تایید</button>
+                <button type="button" class="btn btn-secondary" id="resendBtn" style="display:none;" onclick="resendCode()">ارسال دوباره کد</button>
+            }
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@section Scripts {
+    <script>
+        var timeLeft = @ViewBag.RemainingSeconds; // seconds remaining from server
+        var timerElement = document.getElementById("timer");
+        var submitBtn = document.getElementById("submitBtn");
+        var resendBtn = document.getElementById("resendBtn");
+        var countdown;
+
+        function startTimer() {
+            submitBtn.disabled = false;
+            resendBtn.style.display = "none";
+
+            countdown = setInterval(function () {
+                var minutes = Math.floor(timeLeft / 60);
+                var seconds = timeLeft % 60;
+                if (seconds < 10) seconds = "0" + seconds;
+                if (minutes < 10) minutes = "0" + minutes;
+                timerElement.textContent = minutes + ":" + seconds;
+
+                timeLeft--;
+
+                if (timeLeft < 0) {
+                    clearInterval(countdown);
+                    timerElement.textContent = "کد منقضی شد";
+                    submitBtn.disabled = true;
+                    resendBtn.style.display = "inline-block";
+                }
+            }, 1000);
+        }
+
+        startTimer();
+        function resendCode() {
+
+            var data = {
+                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/Account/Resend2FaCode",
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    timeLeft = 120;
+                    startTimer();
+                    alert("کد جدید ارسال شد.");
+
+                },
+                error: function (xhr, status, error) {
+                    alert("ارسال کد جدید ناموفق بود.");
+                    console.error(error);
+                }
+            });
+        }
+
+
+    </script>
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,171 @@
+﻿@using DrugStockWeb.Helper
+@using DrugStockWeb.Models.Constanct
+@using DrugStockWeb.Models.Constancts
+@using DrugStockWeb.Utitlities
+@using Microsoft.AspNet.Identity
+@model List<DrugStockWeb.Models.Invoice.Invoice>
+<div class="card-body p-0">
+    <table class="table table-striped table-responsive-sm text-center">
+        <thead>
+            <tr>
+                <th>توضیحات</th>
+                <th>شماره فاکتور</th>
+                <th>تاریخ فاکتور</th>
+                <th>خریدار</th>
+                <th>جمع مبلغ(قیمت فروش)</th>
+                <th>کاربر ایجاد کننده</th>
+                <th>انبار</th>
+                <th>وضعیت</th>
+                <th>عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                    <td>@(item.Describe )</td>
+                    <td>@(item.FactorNumber )</td>
+                    <td>@item.FactorDate.ToShamsi(PersianDateTimeFormat.Date)</td>
+                    <td>@(item.BusinnessPartner.FirstName +" "+item.BusinnessPartner.LastName +(item.BusinnessPartner.BusinnessPartnerGroup.BusinnessPartnerLegalTypeId !=BusinnessPartnerLegalTypeValues.Haghighi ? "("+item.BusinnessPartner.CompanyName + ")" : "") )</td>
+                    <td>
+                        @{
+                            long sumBuy = 0;
+                            var sum = item.InvoiceDetails.AsEnumerable().GroupBy(p => p.InvoiceId).Select(a => new
+                            {
+                                amount = a.Sum(p => (p.Count * p.SellPrice))
+                            }).ToList();
+                            if (sum.Count > 0)
+                            {
+                                sumBuy = sum[0].amount;
+                            }
+                        }
+                        @sumBuy.ToString().Cur()
+                    </td>
+
+                    <td>@item.CreatorUser.FirstName @item.CreatorUser.LastName</td>
+                    <td>@item.Store.Title</td>
+                    @* <td>@(item.BusinnessPartner.BusinnessPartnerGroup.BusinnessPartnerLegalType.Title+item.IsAccountingConfirmed)</td> *@
+                    @{
+                        
+                        if (item.BusinnessPartner.BusinnessPartnerGroup.BusinnessPartnerLegalTypeId == BusinnessPartnerLegalTypeValues.Dolati)
+                        {
+                            <td>
+                                @(item.IsConfirmed ? " تائید شده" : " در انتظار تائید انبار")
+                            </td>
+                        }
+                        else
+                        {
+                            if (!item.IsAccountingConfirmed)
+                            {
+                                <td>در انتظار تائید حسابداری</td>
+                            }
+                            else if (item.IsAccountingConfirmed && !item.IsConfirmed)
+                            {
+                                <td>در انتظار تائید انبار</td>
+                            }
+                            else
+                            {
+                                <td>تائید نهایی</td>
+                            }
+                        }
+                    }
+
+                    <td>
+                        <div>
+                            @{
+                                <a target="_blank" title="چاپ حواله" href="@Url.Action("PrintInvoice",new {id= item.Id })"  class="btn btn-google shadow btn-xs sharp mr-1"><i class="fa fa-print" style="cursor: pointer; color: white"></i></a>
+
+                                if (item.BusinnessPartner.BusinnessPartnerGroup.SellWithBuyPrice && item.BusinnessPartner.BusinnessPartnerGroup.BusinnessPartnerLegalTypeId == BusinnessPartnerLegalTypeValues.Dolati)
+                                {
+
+                                    if (!item.IsConfirmed)
+                                    {
+                                        <a data-toggle="modal" title="تائید حواله" data-target="#DeleteConfirmationModal" onclick="confirmConfirmationModal('@item.Id')" class="btn btn-info shadow btn-xs sharp"><i style="color: #fff; cursor: pointer" class="fa fa-check"></i></a>
+
+                                        <a data-toggle="modal" title="حذف حواله" data-target="#DeleteConfirmationModal" onclick="confirmDeleteModal('@item.Id')" style="margin-left: 3px;" class="btn btn-danger shadow btn-xs sharp"><i style="color: #fff; cursor: pointer" class="fa fa-trash"></i></a>
+                                    }
+
+                                }
+                                else
+                                {
+                                    if (!item.IsAccountingConfirmed)
+                                    {
+                                        if (PermissionHelper.HasPermission(PermissionValue.CanConfirmAccountingInvoice, User.Identity.GetUserId()))
+                                        {
+                                            <a data-toggle="modal" title="تائید حسابداری" data-target="#DeleteConfirmationModal" onclick="confirmAccoutingConfirmationModal('@item.Id')" class="btn  shadow btn-xs sharp" style="background-color: indianred;"><i style="color: #fff; cursor: pointer" class="fa fa-coins"></i></a>
+                                        }
+
+                                        <a data-toggle="modal" title="حذف حواله" data-target="#DeleteConfirmationModal" onclick="confirmDeleteModal('@item.Id')" style="margin-left: 3px;" class="btn btn-danger shadow btn-xs sharp"><i style="color: #fff; cursor: pointer" class="fa fa-trash"></i></a>
+                                    }
+                                    else if (item.IsAccountingConfirmed && !item.IsConfirmed && PermissionHelper.HasPermission(PermissionValue.ConfirmInvoice, User.Identity.GetUserId()))
+                                    {
+                                        <a data-toggle="modal" title="تائید حواله" data-target="#DeleteConfirmationModal" onclick="confirmConfirmationModal('@item.Id')" class="btn btn-info shadow btn-xs sharp"><i style="color: #fff; cursor: pointer" class="fa fa-check"></i></a>
+                                    }
+                                }
+                                <a href="@Url.Action("CreateInvoice/"+item.Id)" title="ویرایش حواله" class="btn btn-success shadow btn-xs sharp mr-1"><i class="fa fa-edit" style="cursor: pointer; color: white"></i></a>
+                                if (item.IsConfirmed && PermissionHelper.HasPermission(PermissionValue.CreateInvoiceReturn,User.Identity.GetUserId()))
+                                {
+                                    <a href="@Url.Action("ReturnInvoice",new {invoiceId= item.Id })" title="مرجوع حواله" class="btn btn-google shadow btn-xs sharp mr-1"><i class="fa fa-recycle" style="cursor: pointer; color: white"></i></a>
+
+                                }
+                            }
+                        </div>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-center">
+        <nav class="table-responsive">
+            <ul class="pagination justify-content-center d-flex flex-wrap">
+                
+                @if (ViewBag.Page > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" onclick="SearchInvoice(1)">اولین</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" onclick="SearchInvoice(@(ViewBag.Page - 1))">قبلی</a>
+                    </li>
+                }
+                @{
+                    var maxPageCount = ViewBag.Page;
+                    var l = 1;
+                    for (int i = ViewBag.Page; i <= ViewBag.PageCount; i++)
+                    {
+                        maxPageCount = i;
+                        l++;
+                        if(l>5)
+                        {
+                            break;
+                        }
+
+                    }
+                }
+
+                @for (int i = (ViewBag.Page>2? ViewBag.Page-2 : 1); i <=  maxPageCount; i++)
+
+                {
+                    <li class="page-item @(i == ViewBag.Page ? "active" : "")">
+                        <a class="page-link" onclick="SearchInvoice(@i);">@i</a>
+                    </li>
+                }
+
+                @if (ViewBag.Page < ViewBag.PageCount)
+                {
+                    <li class="page-item">
+                        <a class="page-link" onclick="SearchInvoice(@(ViewBag.Page + 1))">بعدی</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" onclick="SearchInvoice(@(ViewBag.PageCount))">آخرین</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+
+
+</div>
+

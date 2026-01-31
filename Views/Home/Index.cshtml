@@ -1,0 +1,85 @@
+﻿@{
+    ViewBag.Title = "سامانه انبار و فروش دارو";
+}
+<div class="modal fade" id="DeleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+
+            </div>
+            <div class="modal-body">
+                آیا مطمئن هستید؟11
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="confirmDelete">دیدم</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="background-image: url('../../Content/images/background.jpg'); background-repeat: no-repeat; background-position: center; height: 1000px; width: 100%; text-align: center; padding-top: 40px;font-size: larger">
+
+    <div>به نرم افزار انبار دارو و تجهیزات پزشکی خوش آمدید</div>
+    <div>نسخه V0.1</div>
+
+</div>
+
+@{
+    Html.RenderPartial("_sweetAlert");
+}
+<script>
+    let failedLoginText = @Html.Raw(Json.Encode(ViewBag.FailedLoginText));
+    function closeDeleteModal() {
+        var modal = document.getElementById('DeleteConfirmationModal');
+
+        // Remove Bootstrap's "show" class
+        modal.classList.remove('show');
+
+        // Hide modal element
+        modal.style.display = 'none';
+        modal.setAttribute('aria-hidden', 'true');
+
+        // Remove backdrop if exists
+        document.querySelectorAll('.modal-backdrop').forEach(function (backdrop) {
+            backdrop.parentNode.removeChild(backdrop);
+        });
+
+        // Restore body state
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+    }
+    if (failedLoginText && failedLoginText.length > 0) {
+        $("#DeleteConfirmationModal .modal-body").html(failedLoginText); // Use .html() to render <br> as new lines
+
+        $("#confirmDelete").off("click").on("click", function () {
+            var data = {
+                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+            };
+            $.ajax({
+                url: '/Home/MarkAsSeen', // Replace with your actual controller name
+                type: 'POST',
+                data: data,
+                success: function (response) {
+                    if (response.success) {
+                        
+                        closeDeleteModal(); // manually close modal
+                    } else {
+                        alert("خطایی رخ داده است. لطفاً دوباره تلاش کنید.");
+                    }
+                },
+                error: function () {
+                    alert("ارتباط با سرور برقرار نشد.");
+                }
+            });
+
+        });
+
+        $('#DeleteConfirmationModal').modal({
+            backdrop: 'static',
+            keyboard: false
+        }).modal('show');
+    }
+</script>
+
+
+

@@ -1,0 +1,38 @@
+﻿@using DrugStockWeb.Utitlities
+@model List<DrugStockWeb.ViewModels.Invoice.CreateInvoiceDetailViewModel>
+
+<table class="table table-striped table-responsive-sm text-center">
+    <thead>
+    <tr>
+        <th>نام محصول</th>
+        <th>بچ نامبر</th>
+        <th>تاریخ انقضا</th>
+        <th>تعداد</th>
+        <th>قیمت فروش</th>
+        <th>جمع قیمت فروش</th>
+        <th>عملیات</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+
+            <td>@item.ProductTitle</td>
+            <td>@item.StoreReceiptDetail.BatchNumber</td>
+            <td>@(item.StoreReceiptDetail.ExpireDate.ToShortDateString()+" ("+ item.StoreReceiptDetail.ExpireDate.ToShamsi(PersianDateTimeFormat.Date)+")")</td>
+            <td>@item.Count</td>
+            <td>@item.SellPrice.ToString().Cur()</td>
+            <td>@((item.SellPrice*item.Count).ToString().Cur())</td>
+            <td>
+                <div>
+                    <a onclick="UpdateInvoiceDetail('@(item.Id)')" title="ویرایش" class="btn btn-success shadow btn-xs sharp mr-1"><i class="fa fa-edit" style="cursor: pointer; color: white"></i></a>
+                    <a data-toggle="modal" data-target="#DeleteConfirmationModal" title="حذف" onclick="DeleteInvoiceDetail('@(item.Id)')" class="btn btn-danger shadow btn-xs sharp"><i style="color: #fff; cursor: pointer" class="fa fa-trash"></i></a>
+
+                </div>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

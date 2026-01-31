@@ -1,0 +1,29 @@
+﻿@if (TempData["sweetMsg"] != null)
+{
+    if ((string)TempData["sweetType"] == "success")
+    {
+<script type="text/javascript">
+
+            Swal.fire({
+                title: 'موفق',
+                text: '@TempData["sweetMsg"]',
+                icon: 'success',
+                confirmButtonText: 'باشه'
+            });
+</script>
+    }
+    if ((string)TempData["sweetType"] == "fail")
+    {
+<script type="text/javascript">
+
+            Swal.fire({
+                title: 'ناموفق',
+                text: '@TempData["sweetMsg"]',
+                icon: 'error    ',
+                confirmButtonText: 'باشه'
+            });
+</script>
+    }
+
+}
+

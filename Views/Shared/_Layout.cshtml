@@ -1,0 +1,636 @@
+﻿@using DrugStockWeb.Helper
+@using DrugStockWeb.Models.Constancts
+@using Microsoft.AspNet.Identity
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    @* <link rel="icon" href="https://test.maliyaar.ir/assets/images/logo/logo-light.png"> *@
+    @* <link href="https://test.maliyaar.ir/vendor/jqvmap/css/jqvmap.min.css" rel="stylesheet"> *@
+    @* <link rel="stylesheet" href="https://test.maliyaar.ir/vendor/chartist/css/chartist.min.css"> *@
+    @* <link href="https://test.maliyaar.ir/vendor/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet"> *@
+    @* <script src="https://lipis.github.io/bootstrap-sweetalert/lib/sweet-alert.js"></script> *@
+
+    @* <link href="https://test.maliyaar.ir/css/style-new.css" rel="stylesheet"> *@
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @* <link rel="stylesheet" href="https://test.maliyaar.ir/bootstrap/css/bootstrap.rtl.css"> *@
+    @* <link rel="stylesheet" href="https://test.maliyaar.ir/admin-assets/css/temporary.css"> *@
+    @* <link rel="stylesheet" href="https://test.maliyaar.ir/admin-assets/sweetalert/sweetalert2.css"> *@
+    @* <link rel="stylesheet" href="https://test.maliyaar.ir/admin-assets/select2/css/select2.css"> *@
+
+    @* <link href="https://test.maliyaar.ir/admin-assets/fontAwesome/css/all.css" rel="stylesheet"> *@
+    @* *@
+    @* <script src="https://test.maliyaar.ir/admin-assets/js/jquery-3.6.0.min.js"></script> *@
+    /* Chart.js */
+</head>
+
+
+
+@* </body> *@
+<body data-typography="roboto" data-theme-version="light" data-layout="vertical" data-nav-headerbg="color_3" data-headerbg="color_1" data-sidebar-style="full" data-sibebarbg="color_1" data-sidebar-position="fixed" data-header-position="fixed" data-container="wide" direction="ltr" data-primary="color_1">
+<div class="modal fade" id="GenerelModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+
+            </div>
+            <div class="modal-body">
+                آیا مطمئن هستید؟11
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="confirmGeneralModal">دیدم</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+        .nav-text {
+            font-weight: bolder;
+        }
+
+        .filter-green {
+            filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%);
+        }
+    </style>
+    <div id="preloader" style="display: none;">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <div id="main-wrapper" class="show">
+
+        <!--**********************************
+    Nav header start
+    ***********************************-->
+        <div class="nav-header">
+            <a class="brand-logo">
+                @* <img class="logo-abbr" src="https://test.maliyaar.ir/assets/images/logo/logo-light.png" alt=""> *@
+                @* <img class="logo-compact" src="https://test.maliyaar.ir/assets/images/dashbord-logo.png" alt=""> *@
+                @* <img class="brand-title" src="https://test.maliyaar.ir/assets/images/dashbord-logo.png" alt=""> *@
+            </a>
+
+            <div class="nav-control">
+                <div class="hamburger">
+                    <span class="line"></span><span class="line"></span><span class="line"></span>
+                </div>
+            </div>
+        </div>
+        <div class="header">
+            <div class="header-content">
+                @Html.Action("NavBar", "Home")
+            </div>
+        </div>
+        <!--**********************************
+    Header end ti-comment-alt
+    ***********************************-->
+        <!--**********************************
+    Sidebar start
+    ***********************************-->
+        <div class="deznav">
+            <div class="deznav-scroll mm-active ps ps--active-y">
+                <div class="deznav-scroll mm-active ps ps--active-y">
+                    <ul class="metismenu mm-show" id="menu">
+                        <li>
+                            <a class="ai-icon" href="@Url.Action("Index","Home")" aria-expanded="false">
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <rect x="0" y="0" width="24" height="24"></rect>
+                                        <rect fill="#000000" x="4" y="4" width="7" height="7" rx="1.5"></rect>
+                                        <path d="M5.5,13 L9.5,13 C10.3284271,13 11,13.6715729 11,14.5 L11,18.5 C11,19.3284271 10.3284271,20 9.5,20 L5.5,20 C4.67157288,20 4,19.3284271 4,18.5 L4,14.5 C4,13.6715729 4.67157288,13 5.5,13 Z M14.5,4 L18.5,4 C19.3284271,4 20,4.67157288 20,5.5 L20,9.5 C20,10.3284271 19.3284271,11 18.5,11 L14.5,11 C13.6715729,11 13,10.3284271 13,9.5 L13,5.5 C13,4.67157288 13.6715729,4 14.5,4 Z M14.5,13 L18.5,13 C19.3284271,13 20,13.6715729 20,14.5 L20,18.5 C20,19.3284271 19.3284271,20 18.5,20 L14.5,20 C13.6715729,20 13,19.3284271 13,18.5 L13,14.5 C13,13.6715729 13.6715729,13 14.5,13 Z" fill="#000000" opacity="0.3"></path>
+                                    </g>
+                                </svg>
+                                <span class="nav-text">صفحه اصلی</span>
+                            </a>
+                        </li>
+                        @if (PermissionHelper.HasPermission(PermissionValue.ShowStore, User.Identity.GetUserId()))
+                        {
+                            <li>
+                                <a class="has-arrow ai-icon" aria-expanded="false">
+                                    <svg class="svg-inline--fa fa-money-bill-alt fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-alt" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M352 288h-16v-88c0-4.42-3.58-8-8-8h-13.58c-4.74 0-9.37 1.4-13.31 4.03l-15.33 10.22a7.994 7.994 0 0 0-2.22 11.09l8.88 13.31a7.994 7.994 0 0 0 11.09 2.22l.47-.31V288h-16c-4.42 0-8 3.58-8 8v16c0 4.42 3.58 8 8 8h64c4.42 0 8-3.58 8-8v-16c0-4.42-3.58-8-8-8zM608 64H32C14.33 64 0 78.33 0 96v320c0 17.67 14.33 32 32 32h576c17.67 0 32-14.33 32-32V96c0-17.67-14.33-32-32-32zM48 400v-64c35.35 0 64 28.65 64 64H48zm0-224v-64h64c0 35.35-28.65 64-64 64zm272 192c-53.02 0-96-50.15-96-112 0-61.86 42.98-112 96-112s96 50.14 96 112c0 61.87-43 112-96 112zm272 32h-64c0-35.35 28.65-64 64-64v64zm0-224c-35.35 0-64-28.65-64-64h64v64z"></path></svg><!-- <i class="fa fa-money-bill-alt"></i> Font Awesome fontawesome.com -->
+                                    <span class="nav-text">انبار</span>
+                                </a>
+                                <ul aria-expanded="false" style="list-style: none;" class="mm-collapse">
+                                    <li>
+                                        <a class="ai-icon" href="@Url.Action("CreateStore", "Store")" aria-expanded="false">
+                                            <svg class="svg-inline--fa fa-money-bill-wave fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-wave" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"></path></svg><!-- <i class="fa fa-money-bill-wave"></i> Font Awesome fontawesome.com -->
+                                            <span class="nav-fill">ایجاد انبار جدید</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="ai-icon" href="@Url.Action("Index", "Store")" aria-expanded="false">
+                                            <svg class="svg-inline--fa fa-money-bill-wave fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-wave" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"></path></svg><!-- <i class="fa fa-money-bill-wave"></i> Font Awesome fontawesome.com -->
+                                            <span class="nav-fill">لیست انبار</span>
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </li>
+                        }
+                        @if (PermissionHelper.HasPermission(PermissionValue.ShowProductGroup, User.Identity.GetUserId()) || PermissionHelper.HasPermission(PermissionValue.ShowProductSubGroup, User.Identity.GetUserId()))
+                        {
+
+                            <li>
+                                <a class="has-arrow ai-icon" aria-expanded="false">
+                                    <svg class="svg-inline--fa fa-money-bill-alt fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-alt" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M352 288h-16v-88c0-4.42-3.58-8-8-8h-13.58c-4.74 0-9.37 1.4-13.31 4.03l-15.33 10.22a7.994 7.994 0 0 0-2.22 11.09l8.88 13.31a7.994 7.994 0 0 0 11.09 2.22l.47-.31V288h-16c-4.42 0-8 3.58-8 8v16c0 4.42 3.58 8 8 8h64c4.42 0 8-3.58 8-8v-16c0-4.42-3.58-8-8-8zM608 64H32C14.33 64 0 78.33 0 96v320c0 17.67 14.33 32 32 32h576c17.67 0 32-14.33 32-32V96c0-17.67-14.33-32-32-32zM48 400v-64c35.35 0 64 28.65 64 64H48zm0-224v-64h64c0 35.35-28.65 64-64 64zm272 192c-53.02 0-96-50.15-96-112 0-61.86 42.98-112 96-112s96 50.14 96 112c0 61.87-43 112-96 112zm272 32h-64c0-35.35 28.65-64 64-64v64zm0-224c-35.35 0-64-28.65-64-64h64v64z"></path></svg><!-- <i class="fa fa-money-bill-alt"></i> Font Awesome fontawesome.com -->
+                                    <span class="nav-text">گروه محصولات</span>
+                                </a>
+                                <ul aria-expanded="false" style="list-style: none;" class="mm-collapse">
+                                    @if (PermissionHelper.HasPermission(PermissionValue.ShowProductGroup, User.Identity.GetUserId()))
+                                    {
+
+                                        <li>
+                                            <a class="ai-icon" href="@Url.Action("CreateProductGroup", "ProductGroup")" aria-expanded="false">
+                                                <svg class="svg-inline--fa fa-money-bill-wave fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-wave" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"></path></svg><!-- <i class="fa fa-money-bill-wave"></i> Font Awesome fontawesome.com -->
+                                                <span class="nav-fill">ایجاد گروه جدید</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="ai-icon" href="@Url.Action("ProductGroupList", "ProductGroup")" aria-expanded="false">
+                                                <svg class="svg-inline--fa fa-money-bill-wave fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-wave" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"></path></svg><!-- <i class="fa fa-money-bill-wave"></i> Font Awesome fontawesome.com -->
+                                                <span class="nav-fill">لیست گروه محصولات</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (PermissionHelper.HasPermission(PermissionValue.ShowProductSubGroup, User.Identity.GetUserId()))
+                                    {
+
+                                        <li>
+                                            <a class="ai-icon" href="@Url.Action("CreateProductSubGroup", "ProductSubGroup")" aria-expanded="false">
+                                                <svg class="svg-inline--fa fa-money-bill-wave fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-wave" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"></path></svg><!-- <i class="fa fa-money-bill-wave"></i> Font Awesome fontawesome.com -->
+                                                <span class="nav-fill">ایجاد زیرگروه جدید</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="ai-icon" href="@Url.Action("ProductSubGroupList", "ProductSubGroup")" aria-expanded="false">
+                                                <svg class="svg-inline--fa fa-money-bill-wave fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-wave" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"></path></svg><!-- <i class="fa fa-money-bill-wave"></i> Font Awesome fontawesome.com -->
+                                                <span class="nav-fill">لیست زیرگروه محصولات</span>
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+
+
+                            </li>
+                        }
+                        @if (PermissionHelper.HasPermission(PermissionValue.ShowProduct, User.Identity.GetUserId()) || PermissionHelper.HasPermission(PermissionValue.ShowManufacture, User.Identity.GetUserId()))
+                        {
+
+                            <li>
+                                <a class="has-arrow ai-icon" aria-expanded="false">
+                                    <svg class="svg-inline--fa fa-money-bill-alt fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-alt" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M352 288h-16v-88c0-4.42-3.58-8-8-8h-13.58c-4.74 0-9.37 1.4-13.31 4.03l-15.33 10.22a7.994 7.994 0 0 0-2.22 11.09l8.88 13.31a7.994 7.994 0 0 0 11.09 2.22l.47-.31V288h-16c-4.42 0-8 3.58-8 8v16c0 4.42 3.58 8 8 8h64c4.42 0 8-3.58 8-8v-16c0-4.42-3.58-8-8-8zM608 64H32C14.33 64 0 78.33 0 96v320c0 17.67 14.33 32 32 32h576c17.67 0 32-14.33 32-32V96c0-17.67-14.33-32-32-32zM48 400v-64c35.35 0 64 28.65 64 64H48zm0-224v-64h64c0 35.35-28.65 64-64 64zm272 192c-53.02 0-96-50.15-96-112 0-61.86 42.98-112 96-112s96 50.14 96 112c0 61.87-43 112-96 112zm272 32h-64c0-35.35 28.65-64 64-64v64zm0-224c-35.35 0-64-28.65-64-64h64v64z"></path></svg><!-- <i class="fa fa-money-bill-alt"></i> Font Awesome fontawesome.com -->
+                                    <span class="nav-text">محصولات</span>
+                                </a>
+                                <ul aria-expanded="false" style="list-style: none;" class="mm-collapse">
+                                    @if (PermissionHelper.HasPermission(PermissionValue.ShowManufacture, User.Identity.GetUserId()))
+                                    {
+
+                                        <li>
+                                            <a class="ai-icon" href="@Url.Action("CreateManufacture", "Manufacture")" aria-expanded="false">
+                                                <svg class="svg-inline--fa fa-money-bill-wave fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-wave" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"></path></svg><!-- <i class="fa fa-money-bill-wave"></i> Font Awesome fontawesome.com -->
+                                                <span class="nav-fill">ثبت شرکت سازنده جدید</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="ai-icon" href="@Url.Action("ManufactureList", "Manufacture")" aria-expanded="false">
+                                                <svg class="svg-inline--fa fa-money-bill-wave fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-wave" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"></path></svg><!-- <i class="fa fa-money-bill-wave"></i> Font Awesome fontawesome.com -->
+                                                <span class="nav-fill">لیست شرکت های سازنده</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (PermissionHelper.HasPermission(PermissionValue.ShowProduct, User.Identity.GetUserId()))
+                                    {
+
+                                        <li>
+                                            <a class="ai-icon" href="@Url.Action("CreateProduct", "Product")" aria-expanded="false">
+                                                <svg class="svg-inline--fa fa-money-bill-wave fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-wave" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"></path></svg><!-- <i class="fa fa-money-bill-wave"></i> Font Awesome fontawesome.com -->
+                                                <span class="nav-fill">ثبت دارو و تجهیزات</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="ai-icon" href="@Url.Action("ProductList", "Product")" aria-expanded="false">
+                                                <svg class="svg-inline--fa fa-money-bill-wave fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-wave" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"></path></svg><!-- <i class="fa fa-money-bill-wave"></i> Font Awesome fontawesome.com -->
+                                                <span class="nav-fill">لیست دارو و تجهیزات</span>
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+
+                            </li>
+                        }
+                        @if (PermissionHelper.HasPermission(PermissionValue.ShowBusinnessPartnerGroup, User.Identity.GetUserId()) || PermissionHelper.HasPermission(PermissionValue.ShowBusinnessPartner, User.Identity.GetUserId()))
+                        {
+
+                            <li>
+                                <a class="has-arrow ai-icon" aria-expanded="false">
+                                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 122.88 91.99" style="enable-background: new 0 0 122.88 91.99" xml:space="preserve">
+                                    <style type="text/css">
+                                        .st0 {
+                                            fill-rule: evenodd;
+                                            clip-rule: evenodd;
+                                        }
+</style><g><path class="st0" d="M45.13,35.29h-0.04l-6.54,16.22l-2.22-10.17h0.89c0.81,0,1.47-0.66,1.47-1.47v-2.39 c0-0.81-0.66-1.47-1.47-1.47H31.9c-0.81,0-1.47,0.66-1.47,1.47v2.39c0,0.81,0.66,1.47,1.47,1.47h0.91l-2.29,10.03l-6.21-16.08 C17.04,35.6,9.47,41.91,5.02,51.3c-2.61,5.51-3.3,9.66-3.73,15.55C0.42,72.79-0.03,78.67,0,84.47c1.43,9.03,12.88,6.35,13.85,0 l1.39-18.2c0.21-2.75,0.4-4.61,1.51-7.23c0.52-1.23,1.15-2.28,1.89-3.15l0.69,33.25l-0.39,2.78h31.49l-0.42-3.1l0.61-36.67 c3.19-1.29,5.96-1.89,8.39-1.99c-0.12,0.25-0.25,0.5-0.37,0.75c-2.61,5.51-3.3,9.66-3.73,15.55c-0.86,5.93-1.32,11.81-1.29,17.61 c1.43,9.03,12.88,6.35,13.85,0l1.39-18.2c0.21-2.75,0.4-4.61,1.51-7.23c0.52-1.23,1.15-2.28,1.89-3.15l0.69,33.25l-0.46,3.24h31.62 l-0.48-3.55l0.49-28.62v0.56l0.1-4.87c0.74,0.87,1.36,1.92,1.89,3.15c1.12,2.62,1.3,4.48,1.51,7.23l1.39,18.2 c0.15,0.95,0.53,1.82,1.07,2.57h11.97c0.37-0.72,0.65-1.58,0.81-2.57c0.03-5.81-0.42-11.68-1.29-17.61 c-0.43-5.89-1.12-10.04-3.73-15.55c-4.57-9.65-10.48-14.76-19.45-15.81l-6.32,16.01l-2.13-9.79h1.02c0.81,0,1.47-0.66,1.47-1.47 v-2.39c0-0.81-0.66-1.47-1.47-1.47h-5.33c-0.81,0-1.47,0.66-1.47,1.47v2.39c0,0.81,0.66,1.47,1.47,1.47h0.61l-2.2,9.65l-6-15.98 c-1.38,0.19-2.74,0.47-4.06,0.87c-3.45-0.48-8.01-1.07-12.56-1.09C54.76,34.77,48.14,35.91,45.13,35.29L45.13,35.29z M88.3,0 c9.01,0,16.32,7.31,16.32,16.32c0,9.01-7.31,16.32-16.32,16.32c-9.01,0-16.32-7.31-16.32-16.32C71.98,7.31,79.29,0,88.3,0L88.3,0z M34.56,0c9.01,0,16.32,7.31,16.32,16.32c0,9.01-7.31,16.32-16.32,16.32c-9.01,0-16.32-7.31-16.32-16.32 C18.24,7.31,25.55,0,34.56,0L34.56,0z" /></g></svg>
+                                    <span class="nav-text">طرفان حساب</span>
+                                </a>
+                                <ul aria-expanded="false" style="list-style: none;" class="mm-collapse">
+                                    @if (PermissionHelper.HasPermission(PermissionValue.ShowBusinnessPartnerGroup, User.Identity.GetUserId()))
+                                    {
+                                        <li>
+                                            <a class="ai-icon" href="@Url.Action("CreateBusinnessPartnerGroup", "BusinnessPartnerGroup")" aria-expanded="false">
+                                                <svg class="svg-inline--fa fa-money-bill-wave fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-wave" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"></path></svg><!-- <i class="fa fa-money-bill-wave"></i> Font Awesome fontawesome.com -->
+                                                <span class="nav-fill">ثبت گروه طرفان حساب</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="ai-icon" href="@Url.Action("BusinnessPartnerGroupList", "BusinnessPartnerGroup")" aria-expanded="false">
+                                                <svg class="svg-inline--fa fa-money-bill-wave fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-wave" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"></path></svg><!-- <i class="fa fa-money-bill-wave"></i> Font Awesome fontawesome.com -->
+                                                <span class="nav-fill">لیست گروه طرفان حساب</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (PermissionHelper.HasPermission(PermissionValue.ShowBusinnessPartner, User.Identity.GetUserId()))
+                                    {
+                                        <li>
+                                            <a class="ai-icon" href="@Url.Action("CreateBusinnessPartner", "BusinnessPartner")" aria-expanded="false">
+                                                <svg class="svg-inline--fa fa-money-bill-wave fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-wave" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"></path></svg><!-- <i class="fa fa-money-bill-wave"></i> Font Awesome fontawesome.com -->
+                                                <span class="nav-fill">ثبت طرفان حساب</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="ai-icon" href="@Url.Action("BusinnessPartnerList", "BusinnessPartner")" aria-expanded="false">
+                                                <svg class="svg-inline--fa fa-money-bill-wave fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-wave" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"></path></svg><!-- <i class="fa fa-money-bill-wave"></i> Font Awesome fontawesome.com -->
+                                                <span class="nav-fill">لیست طرفان حساب</span>
+                                            </a>
+                                        </li>
+                                    }
+
+                                </ul>
+
+                            </li>
+                        }
+                        @if (PermissionHelper.HasPermission(PermissionValue.ShowStoreReceipt, User.Identity.GetUserId()))
+                        {
+                            <li>
+                                <a class="has-arrow ai-icon" aria-expanded="false">
+                                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 97.92 122.88" style="enable-background: new 0 0 97.92 122.88" xml:space="preserve">
+                                    <style type="text/css">
+                                        .st0 {
+                                            fill-rule: evenodd;
+                                            clip-rule: evenodd;
+                                        }
+</style><g><path class="st0" d="M21.95,18.35h34.79c2.47,0,2.34,1,2.12,3.55l-1.4,17.92c-0.24,2.85-0.04,2.16-3.06,2.6L29.6,44.59l1.47,4.27 c12.06,0,14.88,0,26.93,0c0.41,1.52,0.96,3.98,1.36,5.67h-4.97l-0.48-1.73c-10.04,0-10.87,0-20.92,0 c-5.49-0.09-4.94,1.39-6.25-3.35l-9.43-32.2H14.4v-4.01h6.32C21.09,14.63,21.61,16.95,21.95,18.35L21.95,18.35z M68.17,0.66 C67.73,0.26,67.11,0,66.5,0c-0.13,0-0.26,0-0.4,0.04H5.54c-1.49,0-2.9,0.62-3.91,1.63C0.62,2.68,0,4.04,0,5.58v111.76 c0,1.54,0.62,2.9,1.63,3.91c1.01,1.01,2.37,1.63,3.91,1.63h86.76c1.54,0,2.9-0.62,3.91-1.63c1.01-1.01,1.63-2.37,1.63-3.91V32.3 c0.04-0.22,0.09-0.4,0.09-0.62c0-0.75-0.35-1.41-0.84-1.89L68.47,0.83c-0.09-0.09-0.13-0.13-0.22-0.18L68.17,0.66L68.17,0.66 L68.17,0.66z M66.2,5.01v19.46c0,2.07,0.84,3.96,2.2,5.32c1.36,1.36,3.25,2.2,5.32,2.2h19.06v85.36c0,0.13-0.04,0.31-0.18,0.4 c-0.09,0.09-0.22,0.18-0.4,0.18H5.49c-0.13,0-0.31-0.04-0.4-0.18c-0.09-0.09-0.18-0.26-0.18-0.4V5.58c0-0.18,0.04-0.31,0.18-0.4 c0.09-0.09,0.22-0.18,0.4-0.18H66.2L66.2,5.01L66.2,5.01z M71.16,24.47V8.97l17.79,18.05H73.71c-0.7,0-1.32-0.31-1.8-0.75 C71.47,25.83,71.16,25.17,71.16,24.47L71.16,24.47L71.16,24.47z M20.52,69.69c-1.36,0-2.5,1.1-2.5,2.5c0,1.36,1.1,2.51,2.5,2.51 h56.13c1.36,0,2.51-1.1,2.51-2.51c0-1.36-1.1-2.5-2.51-2.5H20.52L20.52,69.69z M21.46,99.38c-1.36,0-2.51,1.1-2.51,2.51 c0,1.36,1.1,2.5,2.51,2.5h55.76c1.36,0,2.51-1.1,2.51-2.51c0-1.36-1.1-2.5-2.51-2.5H21.46L21.46,99.38L21.46,99.38z M20.52,85.06 c-1.36,0-2.5,1.1-2.5,2.5c0,1.36,1.1,2.5,2.5,2.5h56.7c1.36,0,2.5-1.1,2.5-2.5c0-1.36-1.1-2.5-2.5-2.5H20.52L20.52,85.06z M37,22.87h7.19v7.3h6.47L40.6,39.95l-10.07-9.79H37V22.87L37,22.87z M33.03,55.21c2.12,0,3.84,1.72,3.84,3.84 c0,2.12-1.72,3.84-3.84,3.84c-2.12,0-3.84-1.72-3.84-3.84C29.19,56.93,30.91,55.21,33.03,55.21L33.03,55.21z M48.86,55.21 c2.12,0,3.84,1.72,3.84,3.84c0,2.12-1.72,3.84-3.84,3.84c-2.12,0-3.84-1.72-3.84-3.84C45.02,56.93,46.74,55.21,48.86,55.21 L48.86,55.21z" /></g></svg>
+                                    <span class="nav-text">رسید انبار</span>
+                                </a>
+                                <ul aria-expanded="false" style="list-style: none;" class="mm-collapse">
+                                    @if (PermissionHelper.HasPermission(PermissionValue.CreateStoreReceipt, User.Identity.GetUserId()))
+                                    {
+                                        <li>
+                                            <a class="ai-icon" href="@Url.Action("CreateStoreReceipt", "StoreReceipt")" aria-expanded="false">
+                                                <div style="width: 20px; float: right; margin-left: 5px; color: blue">
+                                                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 97.92 122.88" style="enable-background: new 0 0 97.92 122.88" xml:space="preserve">
+                                                    <style type="text/css">
+                                                        .st0 {
+                                                            fill-rule: evenodd;
+                                                            clip-rule: evenodd;
+                                                        }
+</style><g><path class="st0" d="M21.95,18.35h34.79c2.47,0,2.34,1,2.12,3.55l-1.4,17.92c-0.24,2.85-0.04,2.16-3.06,2.6L29.6,44.59l1.47,4.27 c12.06,0,14.88,0,26.93,0c0.41,1.52,0.96,3.98,1.36,5.67h-4.97l-0.48-1.73c-10.04,0-10.87,0-20.92,0 c-5.49-0.09-4.94,1.39-6.25-3.35l-9.43-32.2H14.4v-4.01h6.32C21.09,14.63,21.61,16.95,21.95,18.35L21.95,18.35z M68.17,0.66 C67.73,0.26,67.11,0,66.5,0c-0.13,0-0.26,0-0.4,0.04H5.54c-1.49,0-2.9,0.62-3.91,1.63C0.62,2.68,0,4.04,0,5.58v111.76 c0,1.54,0.62,2.9,1.63,3.91c1.01,1.01,2.37,1.63,3.91,1.63h86.76c1.54,0,2.9-0.62,3.91-1.63c1.01-1.01,1.63-2.37,1.63-3.91V32.3 c0.04-0.22,0.09-0.4,0.09-0.62c0-0.75-0.35-1.41-0.84-1.89L68.47,0.83c-0.09-0.09-0.13-0.13-0.22-0.18L68.17,0.66L68.17,0.66 L68.17,0.66z M66.2,5.01v19.46c0,2.07,0.84,3.96,2.2,5.32c1.36,1.36,3.25,2.2,5.32,2.2h19.06v85.36c0,0.13-0.04,0.31-0.18,0.4 c-0.09,0.09-0.22,0.18-0.4,0.18H5.49c-0.13,0-0.31-0.04-0.4-0.18c-0.09-0.09-0.18-0.26-0.18-0.4V5.58c0-0.18,0.04-0.31,0.18-0.4 c0.09-0.09,0.22-0.18,0.4-0.18H66.2L66.2,5.01L66.2,5.01z M71.16,24.47V8.97l17.79,18.05H73.71c-0.7,0-1.32-0.31-1.8-0.75 C71.47,25.83,71.16,25.17,71.16,24.47L71.16,24.47L71.16,24.47z M20.52,69.69c-1.36,0-2.5,1.1-2.5,2.5c0,1.36,1.1,2.51,2.5,2.51 h56.13c1.36,0,2.51-1.1,2.51-2.51c0-1.36-1.1-2.5-2.51-2.5H20.52L20.52,69.69z M21.46,99.38c-1.36,0-2.51,1.1-2.51,2.51 c0,1.36,1.1,2.5,2.51,2.5h55.76c1.36,0,2.51-1.1,2.51-2.51c0-1.36-1.1-2.5-2.51-2.5H21.46L21.46,99.38L21.46,99.38z M20.52,85.06 c-1.36,0-2.5,1.1-2.5,2.5c0,1.36,1.1,2.5,2.5,2.5h56.7c1.36,0,2.5-1.1,2.5-2.5c0-1.36-1.1-2.5-2.5-2.5H20.52L20.52,85.06z M37,22.87h7.19v7.3h6.47L40.6,39.95l-10.07-9.79H37V22.87L37,22.87z M33.03,55.21c2.12,0,3.84,1.72,3.84,3.84 c0,2.12-1.72,3.84-3.84,3.84c-2.12,0-3.84-1.72-3.84-3.84C29.19,56.93,30.91,55.21,33.03,55.21L33.03,55.21z M48.86,55.21 c2.12,0,3.84,1.72,3.84,3.84c0,2.12-1.72,3.84-3.84,3.84c-2.12,0-3.84-1.72-3.84-3.84C45.02,56.93,46.74,55.21,48.86,55.21 L48.86,55.21z" /></g></svg>
+                                                </div>
+                                                <span class="nav-fill">ثبت رسید انبار</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    <li>
+                                        <a class="ai-icon" href="@Url.Action("StoreReceiptList", "StoreReceipt")" aria-expanded="false">
+                                            <svg class="svg-inline--fa fa-money-bill-wave fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-wave" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"></path></svg><!-- <i class="fa fa-money-bill-wave"></i> Font Awesome fontawesome.com -->
+                                            <span class="nav-fill">لیست رسید انبار</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="ai-icon" href="@Url.Action("StoreReceiptReturnList", "StoreReceipt")" aria-expanded="false">
+                                            <svg class="svg-inline--fa fa-money-bill-wave fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-wave" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"></path></svg><!-- <i class="fa fa-money-bill-wave"></i> Font Awesome fontawesome.com -->
+                                            <span class="nav-fill">لیست رسید های مرجوعی</span>
+                                        </a>
+                                    </li>
+
+
+                                </ul>
+
+                            </li>
+                        }
+                        @if (PermissionHelper.HasPermission(PermissionValue.ShowInvoice, User.Identity.GetUserId()))
+                        {
+                            <li>
+                                <a class="has-arrow ai-icon" aria-expanded="false">
+                                    <svg xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd" viewBox="0 0 415 511.65"><path fill-rule="nonzero" d="M13.7 161.65c-7.37 0-13.7-6.32-13.7-14.05 0-7.38 6.33-13.7 13.7-13.7h20.38c12.65.35 23.89 2.81 33.39 8.78 18.38 11.65 21.65 28.29 26.35 47.08h126.7c4.65 11.55 13.04 21.18 23.65 27.43h-61.11v-.01h-81.51l31.27 117.71h221.74l29.16-117.71h-72.29v.01h-10.38c10.61-6.25 18.99-15.88 23.65-27.43h76.6c7.72 0 13.7 6.33 13.7 13.72 0 1.4-.36 2.81-.71 4.21l-35.84 144.42c-1.4 6.33-7.02 10.55-13.35 10.55H140.2c4.93 18.27 9.84 28.11 16.52 32.67 8.09 5.28 22.14 5.62 45.68 5.28h159.19c7.72 0 13.7 6.32 13.7 13.7 0 7.73-6.32 13.7-13.7 13.7H202.76c-29.17.36-47.1-.35-61.5-9.83-14.76-9.84-22.49-26.71-30.22-57.28L63.95 182.74c0-.35 0-.35-.35-.7-2.11-7.74-5.63-13-10.54-15.82-4.92-3.16-11.6-4.57-19.33-4.57H13.7zM211.25 17.33c9.54-16.54 30.88-22.25 47.4-12.7 16.53 9.54 22.24 30.88 12.71 47.4-19.73 34.17-39.41 68-59.13 102.16-4.75 8.23-12.44 13.76-20.99 16.06-8.54 2.29-17.97 1.33-26.2-3.42-8.22-4.75-13.76-12.44-16.06-20.98-2.29-8.54-1.33-17.97 3.43-26.2 19.72-34.21 39.08-68.11 58.84-102.32zm19.58 89.4L184.5 79.99l-25.14 43.53c-3.67 6.38-4.41 13.66-2.63 20.3 1.78 6.63 6.06 12.58 12.42 16.26 6.37 3.67 13.66 4.41 20.29 2.62 6.62-1.77 12.58-6.06 16.26-12.43l25.13-43.54zm73.55 48.29c4.82 9.55 4.99 21.24-.6 31.31-8.94 16.14-29.29 21.98-45.44 13.04-4.75-2.63-8.6-6.26-11.46-10.45l57.5-33.9zm-59.06-1.11c8.94-16.14 29.29-21.98 45.44-13.04 4.4 2.44 8.02 5.72 10.8 9.52l-57.31 33.79c-4.34-9.35-4.31-20.57 1.07-30.27zm52.87-85.66c8.95-16.15 29.29-21.98 45.44-13.04 4.4 2.44 8.02 5.71 10.81 9.52l-57.34 33.8c-4.32-9.36-4.29-20.57 1.09-30.28zm59.06 1.1c4.82 9.56 4.99 21.24-.6 31.32-8.94 16.14-29.29 21.98-45.43 13.04a33.339 33.339 0 0 1-11.46-10.46l57.49-33.9zm-72.27 176.8c0-4.34 4.28-7.85 9.56-7.85s9.56 3.51 9.56 7.85v53c0 4.32-4.28 7.83-9.56 7.83s-9.56-3.51-9.56-7.83v-53zm-57.24 0c0-4.34 4.28-7.85 9.56-7.85s9.56 3.51 9.56 7.85v53c0 4.32-4.28 7.83-9.56 7.83s-9.56-3.51-9.56-7.83v-53zm-57.24 0c0-4.34 4.28-7.85 9.57-7.85 5.27 0 9.55 3.51 9.55 7.85v53c0 4.32-4.28 7.83-9.55 7.83-5.29 0-9.57-3.51-9.57-7.83v-53zm149.97 198.03c18.63 0 33.74 15.11 33.74 33.74 0 18.62-15.11 33.73-33.74 33.73-18.62 0-33.73-15.11-33.73-33.73 0-18.63 15.11-33.74 33.73-33.74zm-147.94 0c18.63 0 33.74 15.11 33.74 33.74 0 18.62-15.11 33.73-33.74 33.73-18.62 0-33.73-15.11-33.73-33.73 0-18.63 15.11-33.74 33.73-33.74z" /></svg>
+                                    <span class="nav-text">حواله انبار</span>
+                                </a>
+                                <ul aria-expanded="false" style="list-style: none;" class="mm-collapse">
+                                    @if (PermissionHelper.HasPermission(PermissionValue.CreateInvoice, User.Identity.GetUserId()))
+                                    {
+                                        <li>
+                                            <a class="ai-icon" href="@Url.Action("CreateInvoice", "Invoice")" aria-expanded="false">
+                                                <svg class="svg-inline--fa fa-money-bill-wave fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-wave" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"></path></svg><!-- <i class="fa fa-money-bill-wave"></i> Font Awesome fontawesome.com -->
+                                                <span class="nav-fill">ثبت حواله انبار</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    <li>
+                                        <a class="ai-icon" href="@Url.Action("InvoiceList", "Invoice")" aria-expanded="false">
+                                            <svg class="svg-inline--fa fa-money-bill-wave fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-wave" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"></path></svg><!-- <i class="fa fa-money-bill-wave"></i> Font Awesome fontawesome.com -->
+                                            <span class="nav-fill">لیست حواله انبار</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="ai-icon" href="@Url.Action("InvoiceReturnList", "Invoice")" aria-expanded="false">
+                                            <svg class="svg-inline--fa fa-money-bill-wave fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-wave" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"></path></svg><!-- <i class="fa fa-money-bill-wave"></i> Font Awesome fontawesome.com -->
+                                            <span class="nav-fill">لیست حواله های مرجوعی</span>
+                                        </a>
+                                    </li>
+
+
+                                </ul>
+
+                            </li>
+                        }
+                        @if (PermissionHelper.HasPermission(PermissionValue.ShowLog, User.Identity.GetUserId()))
+                        {
+                            <li>
+                                <a class="has-arrow ai-icon" aria-expanded="false">
+                                    <svg fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                         width="800px" height="800px" viewBox="0 0 548.291 548.291"
+                                         xml:space="preserve">
+                                        <g>
+                                            <g>
+                                                <path d="M256.08,417.128c-18.09,0-28.625,17.209-28.625,40.21c0,23.183,10.885,39.52,28.795,39.52
+			c18.09,0,28.447-17.209,28.447-40.216C284.702,435.392,274.522,417.128,256.08,417.128z"/>
+                                                <path d="M472.929,131.39c-0.031-2.514-0.829-4.997-2.556-6.96L364.656,3.677c-0.021-0.034-0.053-0.044-0.084-0.075
+			c-0.63-0.704-1.354-1.284-2.132-1.796c-0.23-0.149-0.462-0.283-0.703-0.419c-0.683-0.365-1.387-0.667-2.121-0.888
+			c-0.2-0.058-0.377-0.139-0.577-0.191C358.231,0.113,357.411,0,356.572,0H96.757C84.904,0,75.255,9.649,75.255,21.502V526.79
+			c0,11.858,9.649,21.501,21.502,21.501h354.775c11.863,0,21.503-9.643,21.503-21.501V132.595
+			C473.036,132.191,472.971,131.795,472.929,131.39z M195.477,516.164h-73.93V397.812h26.867v95.88h47.063V516.164z
+			 M254.853,518.101c-35.124,0-55.667-26.515-55.667-60.226c0-35.481,22.651-61.996,57.596-61.996
+			c36.355,0,56.198,27.219,56.198,59.886C312.98,494.568,289.452,518.101,254.853,518.101z M429.433,510.726
+			c-8.263,2.808-23.884,6.672-39.518,6.672c-21.596,0-37.229-5.443-48.115-15.979c-10.889-10.188-16.856-25.643-16.683-43.028
+			c0.177-39.335,28.792-61.817,67.611-61.817c15.276,0,27.041,2.992,32.835,5.794l-5.617,21.43
+			c-6.492-2.814-14.571-5.093-27.569-5.093c-22.305,0-39.161,12.647-39.161,38.279c0,24.408,15.282,38.813,37.234,38.813
+			c6.142,0,11.056-0.704,13.166-1.753v-24.762h-18.258v-20.897h44.074V510.726L429.433,510.726z M96.757,365.081V21.502H345.82
+			v110.011c0,5.935,4.81,10.751,10.752,10.751h94.961l0.011,222.816H96.757z"/>
+                                            </g>
+                                            <g>
+                                                <path d="M355.221,91.376h-15.229v25.985c0,4.699-3.81,8.509-8.508,8.509c-4.705,0-8.51-3.811-8.51-8.509V91.376h-26.878v25.985
+			c0,4.699-3.81,8.509-8.508,8.509c-4.703,0-8.51-3.811-8.51-8.509V91.376h-33.155v25.985c0,4.699-3.811,8.509-8.51,8.509
+			c-4.703,0-8.509-3.811-8.509-8.509V91.376h-26.877v25.985c0,4.699-3.811,8.509-8.51,8.509c-4.703,0-8.509-3.811-8.509-8.509
+			V91.376h-7.165c-8.906,0-16.126,7.218-16.126,16.127v209.641c0,8.907,7.221,16.126,16.126,16.126h177.387
+			c8.909,0,16.127-7.219,16.127-16.126V107.503C371.348,98.595,364.13,91.376,355.221,91.376z M357.915,317.149H171.566V155.887
+			h186.349V317.149z"/>
+                                                <path d="M202.023,88.689c0-4.698-3.811-8.509-8.51-8.509c-4.703,0-8.509,3.811-8.509,8.509v2.688h17.024v-2.688H202.023z"/>
+                                                <path d="M245.924,88.689c0-4.698-3.811-8.509-8.51-8.509c-4.703,0-8.509,3.811-8.509,8.509v2.688h17.024v-2.688H245.924z"/>
+                                                <path d="M296.092,88.689c0-4.698-3.811-8.509-8.508-8.509c-4.705,0-8.511,3.811-8.511,8.509v2.688h17.023v-2.688H296.092z"/>
+                                                <path d="M339.993,88.689c0-4.698-3.81-8.509-8.508-8.509c-4.705,0-8.51,3.811-8.51,8.509v2.688h17.023v-2.688H339.993z"/>
+                                                <path d="M193.514,186.795h137.971c1.485,0,2.688-1.205,2.688-2.688s-1.202-2.688-2.688-2.688H193.514
+			c-1.483,0-2.688,1.205-2.688,2.688S192.031,186.795,193.514,186.795z"/>
+                                                <path d="M193.514,218.15h137.971c1.485,0,2.688-1.205,2.688-2.688s-1.202-2.688-2.688-2.688H193.514
+			c-1.483,0-2.688,1.205-2.688,2.688S192.031,218.15,193.514,218.15z"/>
+                                                <path d="M193.514,254.885h137.971c1.485,0,2.688-1.204,2.688-2.688s-1.202-2.688-2.688-2.688H193.514
+			c-1.483,0-2.688,1.205-2.688,2.688S192.031,254.885,193.514,254.885z"/>
+                                                <path d="M193.514,286.241h137.971c1.485,0,2.688-1.208,2.688-2.688s-1.202-2.688-2.688-2.688H193.514
+			c-1.483,0-2.688,1.207-2.688,2.688S192.031,286.241,193.514,286.241z"/>
+                                            </g>
+                                        </g>
+                                    </svg>
+                                    <span class="nav-text">مدیریت لاگ</span>
+                                </a>
+                                <ul aria-expanded="false" style="list-style: none;" class="mm-collapse">
+
+                                    <li>
+                                        <a class="ai-icon" href="@Url.Action("LogList", "Log")" aria-expanded="false">
+                                            <svg class="svg-inline--fa fa-money-bill-wave fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-wave" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"></path></svg><!-- <i class="fa fa-money-bill-wave"></i> Font Awesome fontawesome.com -->
+                                            <span class="nav-fill">نمایش لاگ ها</span>
+                                        </a>
+                                    </li>
+
+
+                                </ul>
+                            </li>
+                        }
+                        @if (PermissionHelper.HasPermission(PermissionValue.ShowSecuritySetting, User.Identity.GetUserId()) || PermissionHelper.HasPermission(PermissionValue.ChangeSecuritySetting, User.Identity.GetUserId()))
+                            {
+                                <li>
+                                    <a class="ai-icon" href="@Url.Action("SecuritySetting","Log")" aria-expanded="false">
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                <rect x="0" y="0" width="24" height="24"></rect>
+                                                <rect fill="#000000" x="4" y="4" width="7" height="7" rx="1.5"></rect>
+                                                <path d="M5.5,13 L9.5,13 C10.3284271,13 11,13.6715729 11,14.5 L11,18.5 C11,19.3284271 10.3284271,20 9.5,20 L5.5,20 C4.67157288,20 4,19.3284271 4,18.5 L4,14.5 C4,13.6715729 4.67157288,13 5.5,13 Z M14.5,4 L18.5,4 C19.3284271,4 20,4.67157288 20,5.5 L20,9.5 C20,10.3284271 19.3284271,11 18.5,11 L14.5,11 C13.6715729,11 13,10.3284271 13,9.5 L13,5.5 C13,4.67157288 13.6715729,4 14.5,4 Z M14.5,13 L18.5,13 C19.3284271,13 20,13.6715729 20,14.5 L20,18.5 C20,19.3284271 19.3284271,20 18.5,20 L14.5,20 C13.6715729,20 13,19.3284271 13,18.5 L13,14.5 C13,13.6715729 13.6715729,13 14.5,13 Z" fill="#000000" opacity="0.3"></path>
+                                            </g>
+                                        </svg>
+                                        <span class="nav-text">تنظیمات امنیتی</span>
+                                    </a>
+                                </li>
+                        }
+
+                        <li>
+                            <a class="has-arrow ai-icon" aria-expanded="false">
+                                <svg xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd" viewBox="0 0 512 229.02"><path d="M397.11 189.528c19.559 2.95 40.984-3.85 47.595-21.606C483.069 192.446 512 176.882 512 229.02H403.237c0-17.639-2.149-30.21-6.127-39.492zM128.795 229.02c4.755-61.58 28.363-38.802 81.188-71.854 16.315 34.041 82.624 36.515 96.221 0 45.588 29.143 79.968 9.897 79.968 71.854H128.795zm93.639-74.539c-.703-.913 1.842-7.183 2.445-8.197-6.902-6.141-12.356-12.337-13.518-25.088l-.74.016c-1.709-.023-3.357-.416-4.9-1.295-2.472-1.406-4.21-3.819-5.384-6.54-2.485-5.71-10.67-24.66 1.801-23.163-6.973-13.023 8.809-35.271-18.411-43.499 22.334-28.286 69.455-71.9 103.989-28.151 37.798 3.663 49.588 48.583 24.136 73.186 1.491.054 2.897.398 4.14 1.063 4.732 2.535 4.887 8.036 3.644 12.651-1.231 3.854-2.793 6.462-4.266 10.22-1.793 5.073-4.413 6.018-9.475 5.472-.256 12.544-6.054 18.701-13.855 26.071l2.135 7.232c-10.462 22.191-53.923 23.084-71.741.022zM0 229.02c4.001-51.821 23.868-33.285 68.323-61.098 8.21 17.13 31.463 24.757 51.28 21.553-3.838 8.657-6.369 20.49-7.728 37.307a17.382 17.382 0 00-.146 2.238H0zm78.8-63.358c-.592-.768 1.55-6.044 2.057-6.898-5.808-5.168-10.396-10.382-11.375-21.112l-.623.013c-1.438-.019-2.825-.35-4.123-1.09-2.08-1.183-3.543-3.214-4.531-5.503-2.091-4.805-8.98-20.753 1.516-19.493-5.869-10.959 7.413-29.681-15.494-36.606 18.795-23.803 58.449-60.505 87.51-23.689 31.808 3.083 41.73 40.884 20.311 61.587 1.255.046 2.438.336 3.485.896 3.981 2.133 4.112 6.762 3.065 10.645-1.035 3.243-2.35 5.439-3.59 8.601-1.508 4.269-3.713 5.065-7.973 4.605-.216 10.556-5.094 15.737-11.659 21.939l1.796 6.086a20.274 20.274 0 01-3.803 5.463c-2.181 1.346-4.203 2.84-6.075 4.545-14.605 7.944-38.947 4.957-50.494-9.989zm295.411 0c-.592-.768 1.55-6.044 2.057-6.898-5.808-5.168-10.397-10.382-11.376-21.112l-.622.013c-1.439-.019-2.825-.35-4.124-1.09-2.079-1.183-3.542-3.214-4.53-5.503-2.091-4.805-8.98-20.753 1.515-19.493-5.868-10.959 7.413-29.681-15.493-36.606 18.794-23.803 58.449-60.505 87.509-23.689 31.809 3.083 41.731 40.884 20.312 61.587 1.255.046 2.437.336 3.484.896 3.982 2.133 4.112 6.762 3.066 10.645-1.035 3.243-2.351 5.439-3.59 8.601-1.509 4.269-3.714 5.065-7.974 4.605-.215 10.556-5.094 15.737-11.659 21.939l1.796 6.086c-6.65 14.106-29.144 17.983-46.214 10.672-3.653-3.682-7.918-6.523-12.719-8.928a30.616 30.616 0 01-1.438-1.725z" /></svg>
+                                <span class="nav-text">کاربران</span>
+                            </a>
+                            <ul aria-expanded="false" style="list-style: none;" class="mm-collapse">
+                            @if (PermissionHelper.HasPermission(PermissionValue.ShowRole, User.Identity.GetUserId()) || PermissionHelper.HasPermission(PermissionValue.ChangeSecuritySetting, User.Identity.GetUserId()))
+                            {
+                                <li>
+                                    <a class="ai-icon" href="@Url.Action("RolesList", "Account")" aria-expanded="false">
+                                        <svg class="svg-inline--fa fa-money-bill-wave fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-wave" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"></path></svg><!-- <i class="fa fa-money-bill-wave"></i> Font Awesome fontawesome.com -->
+                                        <span class="nav-fill">لیست نقش ها</span>
+                                    </a>
+                                </li>
+                            }
+                            @if (PermissionHelper.HasPermission(PermissionValue.RegisterUser, User.Identity.GetUserId()) || PermissionHelper.HasPermission(PermissionValue.ChangeSecuritySetting, User.Identity.GetUserId()))
+                            {
+                                <li>
+                                    <a class="ai-icon" href="@Url.Action("Register", "Account")" aria-expanded="false">
+                                        <svg class="svg-inline--fa fa-money-bill-wave fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-wave" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"></path></svg><!-- <i class="fa fa-money-bill-wave"></i> Font Awesome fontawesome.com -->
+                                        <span class="nav-fill">ثبت کاربر جدید</span>
+                                    </a>
+                                </li>
+                            }
+                            @if (PermissionHelper.HasPermission(PermissionValue.ShowUserList, User.Identity.GetUserId()) || PermissionHelper.HasPermission(PermissionValue.ChangeSecuritySetting, User.Identity.GetUserId()))
+                            {
+                                <li>
+                                    <a class="ai-icon" href="@Url.Action("UserList", "Account")" aria-expanded="false">
+                                        <svg class="svg-inline--fa fa-money-bill-wave fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-wave" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"></path></svg><!-- <i class="fa fa-money-bill-wave"></i> Font Awesome fontawesome.com -->
+                                        <span class="nav-fill">لیست کاربران</span>
+                                    </a>
+                                </li>
+                            }
+                            @if (PermissionHelper.HasPermission(PermissionValue.ShowUserList, User.Identity.GetUserId()) || PermissionHelper.HasPermission(PermissionValue.ChangeSecuritySetting, User.Identity.GetUserId()))
+                            {
+                                <li>
+                                    <a class="ai-icon" href="@Url.Action("OnlineUserList", "Account")" aria-expanded="false">
+                                        <svg class="svg-inline--fa fa-money-bill-wave fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-wave" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"></path></svg><!-- <i class="fa fa-money-bill-wave"></i> Font Awesome fontawesome.com -->
+                                        <span class="nav-fill">کاربران آنلاین</span>
+                                    </a>
+                                </li>
+                            }
+                            @if (PermissionHelper.HasPermission(PermissionValue.ShowBlackListIp, User.Identity.GetUserId()) || PermissionHelper.HasPermission(PermissionValue.ChangeSecuritySetting, User.Identity.GetUserId()))
+                            {
+                                <li>
+                                    <a class="ai-icon" href="@Url.Action("BLockListIp", "Account")" aria-expanded="false">
+                                        <svg class="svg-inline--fa fa-money-bill-wave fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-wave" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"></path></svg><!-- <i class="fa fa-money-bill-wave"></i> Font Awesome fontawesome.com -->
+                                        <span class="nav-fill">آی پی های غیرمجاز</span>
+                                    </a>
+                                </li>
+                            }
+                            
+
+
+                            <li>
+                                    <a class="ai-icon" href="@Url.Action("ChangePassword", "Account")" aria-expanded="false">
+                                        <svg class="svg-inline--fa fa-money-bill-wave fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-wave" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"></path></svg><!-- <i class="fa fa-money-bill-wave"></i> Font Awesome fontawesome.com -->
+                                        <span class="nav-fill">تغییر رمز عبور</span>
+                                    </a>
+                                </li>
+
+
+                            </ul>
+
+                        </li>
+
+                        <li>
+                            <a class="has-arrow ai-icon" aria-expanded="false">
+                                <svg xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd" viewBox="0 0 512 229.02"><path d="M397.11 189.528c19.559 2.95 40.984-3.85 47.595-21.606C483.069 192.446 512 176.882 512 229.02H403.237c0-17.639-2.149-30.21-6.127-39.492zM128.795 229.02c4.755-61.58 28.363-38.802 81.188-71.854 16.315 34.041 82.624 36.515 96.221 0 45.588 29.143 79.968 9.897 79.968 71.854H128.795zm93.639-74.539c-.703-.913 1.842-7.183 2.445-8.197-6.902-6.141-12.356-12.337-13.518-25.088l-.74.016c-1.709-.023-3.357-.416-4.9-1.295-2.472-1.406-4.21-3.819-5.384-6.54-2.485-5.71-10.67-24.66 1.801-23.163-6.973-13.023 8.809-35.271-18.411-43.499 22.334-28.286 69.455-71.9 103.989-28.151 37.798 3.663 49.588 48.583 24.136 73.186 1.491.054 2.897.398 4.14 1.063 4.732 2.535 4.887 8.036 3.644 12.651-1.231 3.854-2.793 6.462-4.266 10.22-1.793 5.073-4.413 6.018-9.475 5.472-.256 12.544-6.054 18.701-13.855 26.071l2.135 7.232c-10.462 22.191-53.923 23.084-71.741.022zM0 229.02c4.001-51.821 23.868-33.285 68.323-61.098 8.21 17.13 31.463 24.757 51.28 21.553-3.838 8.657-6.369 20.49-7.728 37.307a17.382 17.382 0 00-.146 2.238H0zm78.8-63.358c-.592-.768 1.55-6.044 2.057-6.898-5.808-5.168-10.396-10.382-11.375-21.112l-.623.013c-1.438-.019-2.825-.35-4.123-1.09-2.08-1.183-3.543-3.214-4.531-5.503-2.091-4.805-8.98-20.753 1.516-19.493-5.869-10.959 7.413-29.681-15.494-36.606 18.795-23.803 58.449-60.505 87.51-23.689 31.808 3.083 41.73 40.884 20.311 61.587 1.255.046 2.438.336 3.485.896 3.981 2.133 4.112 6.762 3.065 10.645-1.035 3.243-2.35 5.439-3.59 8.601-1.508 4.269-3.713 5.065-7.973 4.605-.216 10.556-5.094 15.737-11.659 21.939l1.796 6.086a20.274 20.274 0 01-3.803 5.463c-2.181 1.346-4.203 2.84-6.075 4.545-14.605 7.944-38.947 4.957-50.494-9.989zm295.411 0c-.592-.768 1.55-6.044 2.057-6.898-5.808-5.168-10.397-10.382-11.376-21.112l-.622.013c-1.439-.019-2.825-.35-4.124-1.09-2.079-1.183-3.542-3.214-4.53-5.503-2.091-4.805-8.98-20.753 1.515-19.493-5.868-10.959 7.413-29.681-15.493-36.606 18.794-23.803 58.449-60.505 87.509-23.689 31.809 3.083 41.731 40.884 20.312 61.587 1.255.046 2.437.336 3.484.896 3.982 2.133 4.112 6.762 3.066 10.645-1.035 3.243-2.351 5.439-3.59 8.601-1.509 4.269-3.714 5.065-7.974 4.605-.215 10.556-5.094 15.737-11.659 21.939l1.796 6.086c-6.65 14.106-29.144 17.983-46.214 10.672-3.653-3.682-7.918-6.523-12.719-8.928a30.616 30.616 0 01-1.438-1.725z" /></svg>
+                                <span class="nav-text"> گزارشات</span>
+                            </a>
+
+                            <ul aria-expanded="false" style="list-style: none;" class="mm-collapse">
+                                @if (PermissionHelper.HasPermission(PermissionValue.ReceiptReport, User.Identity.GetUserId()))
+                                {
+                                    <li>
+                                        <a class="ai-icon" href="@Url.Action("ReceiptReport", "ReceiptReport")" aria-expanded="false">
+                                            <svg class="svg-inline--fa fa-money-bill-wave fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-wave" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"></path></svg><!-- <i class="fa fa-money-bill-wave"></i> Font Awesome fontawesome.com -->
+                                            <span class="nav-fill">گزارش رسید انبار</span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermissionHelper.HasPermission(PermissionValue.InvoiceReport, User.Identity.GetUserId()))
+                                {
+                                    <li>
+                                        <a class="ai-icon" href="@Url.Action("InvoiceReport", "InvoiceReport")" aria-expanded="false">
+                                            <svg class="svg-inline--fa fa-money-bill-wave fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-wave" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"></path></svg><!-- <i class="fa fa-money-bill-wave"></i> Font Awesome fontawesome.com -->
+                                            <span class="nav-fill">گزارش حواله انبار</span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermissionHelper.HasPermission(PermissionValue.StockBalanceReport, User.Identity.GetUserId()))
+                                {
+                                    <li>
+                                        <a class="ai-icon" href="@Url.Action("StockBalance", "StoreReport")" aria-expanded="false">
+                                            <svg class="svg-inline--fa fa-money-bill-wave fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-wave" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"></path></svg><!-- <i class="fa fa-money-bill-wave"></i> Font Awesome fontawesome.com -->
+                                            <span class="nav-fill">موجودی انبار</span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermissionHelper.HasPermission(PermissionValue.DisposableStockBalanceReport, User.Identity.GetUserId()))
+                                {
+                                    <li>
+                                        <a class="ai-icon" href="@Url.Action("DisposableStockBalance", "StoreReport")" aria-expanded="false">
+                                            <svg class="svg-inline--fa fa-money-bill-wave fa-w-20" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="money-bill-wave" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M621.16 54.46C582.37 38.19 543.55 32 504.75 32c-123.17-.01-246.33 62.34-369.5 62.34-30.89 0-61.76-3.92-92.65-13.72-3.47-1.1-6.95-1.62-10.35-1.62C15.04 79 0 92.32 0 110.81v317.26c0 12.63 7.23 24.6 18.84 29.46C57.63 473.81 96.45 480 135.25 480c123.17 0 246.34-62.35 369.51-62.35 30.89 0 61.76 3.92 92.65 13.72 3.47 1.1 6.95 1.62 10.35 1.62 17.21 0 32.25-13.32 32.25-31.81V83.93c-.01-12.64-7.24-24.6-18.85-29.47zM48 132.22c20.12 5.04 41.12 7.57 62.72 8.93C104.84 170.54 79 192.69 48 192.69v-60.47zm0 285v-47.78c34.37 0 62.18 27.27 63.71 61.4-22.53-1.81-43.59-6.31-63.71-13.62zM320 352c-44.19 0-80-42.99-80-96 0-53.02 35.82-96 80-96s80 42.98 80 96c0 53.03-35.83 96-80 96zm272 27.78c-17.52-4.39-35.71-6.85-54.32-8.44 5.87-26.08 27.5-45.88 54.32-49.28v57.72zm0-236.11c-30.89-3.91-54.86-29.7-55.81-61.55 19.54 2.17 38.09 6.23 55.81 12.66v48.89z"></path></svg><!-- <i class="fa fa-money-bill-wave"></i> Font Awesome fontawesome.com -->
+                                            <span class="nav-fill">موجودی انبار امحایی</span>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+
+                        </li>
+
+                    </ul>
+
+
+
+
+                    <div class="ps__rail-x" style="left: 0px; bottom: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 0px; height: 0px; left: 271px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div></div>
+                </div>
+
+
+
+                <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                    <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+                </div>
+                <div class="ps__rail-y" style="top: 0px; height: 0px; left: 271px;">
+                    <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!--**********************************
+    Sidebar end
+    ***********************************-->
+
+
+
+
+
+
+
+
+        @Scripts.Render("~/bundles/jquery")
+        <script src="~/Scripts/bootstrap.min.js"></script>
+        @*@Scripts.Render("~/bundles/bootstrap")*@
+
+        @Scripts.Render("~/bundles/menu")
+
+        <!--**********************************
+    Scripts
+    ***********************************-->
+        @Scripts.Render("~/bundles/MyScripts")
+
+        <!--**********************************
+    Content body start
+    ***********************************-->
+        <div class="content-body">
+            @RenderBody()
+
+        </div>
+
+
+    </div>
+    <!--**********************************
+    Main wrapper end
+    ***********************************-->
+    <!--**********************************
+    Scripts
+    ***********************************-->
+
+
+
+
+
+
+
+
+
+
+
+    @RenderSection("scripts", required: false)
+    
+    
+    
+    <script >
+        $(document).ready(function () {
+            $("#confirmGeneralModal").off("click").on("click", function () {
+                $('#GenerelModal').modal('hide'); // Close the modal when "دیدم" is clicked
+            });
+        });
+
+
+    </script>
+    </body>
+</html>
+

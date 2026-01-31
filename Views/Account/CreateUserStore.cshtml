@@ -1,0 +1,175 @@
+﻿@model DrugStockWeb.ViewModels.Account.AssignStoreViewModel
+
+@{
+    ViewBag.Title = "لیست مجوزها";
+}
+
+<div class="modal fade" id="DeleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                آیا مطمئن هستید؟
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">بستن</button>
+                <button type="button" class="btn btn-primary" id="confirmDelete">بله حتما</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@using (Html.BeginForm("CreateUserStore", "Account", FormMethod.Post, new { role = "form", @class = "form-horizontal", autocomplete = "off", id = "CreateStoreForm", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(p => p.Id)
+    <style>
+        .required:before {
+            content: "* ";
+            color: red;
+        }
+    </style>
+    <div class="panel panel-default">
+
+
+
+        <div class="panel-heading">
+            <div class="row">
+
+                <div class="col-md-12">
+
+                    <table class="model-state">
+                        @foreach (var item in ViewContext.ViewData.ModelState)
+                        {
+                            if (item.Value.Errors.Any())
+                            {
+                                <tr>
+                                    @if (@item.Key == "public")
+                                    {
+                                        <td>
+                                            <div class="alert alert-danger  margin-bottom-0"
+                                                 style="margin-bottom: 5px;">
+                                                @(string.Join("; ", item.Value.Errors.Select(x => x.ErrorMessage)))
+                                            </div>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        }
+                    </table>
+
+                    <br>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="panel-body">
+            @* <ul class="nav nav-tabs"> *@
+            @*     <li class="active"> *@
+            @*         <a href="#baseInfo" data-toggle="tab">اطلاعات پایه</a> *@
+            @*     </li> *@
+            @* </ul> *@
+
+            <@Html.HiddenFor(p=>p.UserId)
+            <div class="tab-content">
+                <div class="tab-pane active" id="baseInfo">
+                    <div class="row" style="margin-top: 15px; padding-right: 30px;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group ">
+                                    @Html.LabelFor(p => p.StoreId, new { @class = "control-label col-md-3 required" })
+
+                                    <div>
+                                        @Html.DropDownListFor(p => p.StoreId, Model.StoreList,  new {  @class = "form-control" })
+                                        @Html.ValidationMessageFor(p => p.StoreId, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="panel-footer">
+            <div style="float: right !important; margin-right: 40px;">
+                @* ReSharper disable once UnknownCssClass *@
+                <button type="submit" autocomplete="off" onclick="AjaxForm.CustomSubmit(this, 'CreateVehicleForm')" data-loading-text="در حال ارسال اطلاعات" class="btn btn-success btn-md">
+                    ذخیره
+                </button>
+                @* ReSharper disable once UnknownCssClass *@
+                <a href="@Url.Action("Index", "Home")" class="btn btn-primary btn-md">انصراف</a>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header bg-primary" style="text-align: center">
+                            <h3 class="card-title text-white">لیست مجوز های انبار کاربر</h3>
+                        </div>
+
+                        <div id="ManufactureList">
+                            <div class="card-body p-0">
+                                <table class="table table-striped table-responsive-sm text-center">
+                                    <thead>
+                                        <tr>
+                                            <th>عنوان انبار</th>
+                                            <th>عملیات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.StoreInUserList)
+                                        {
+                                            <tr>
+
+                                                <td>
+                                                    @if (item.Store.Title != null)
+                                                    {
+                                                        @item.Store.Title
+                                                    }
+                                                </td>
+                                                <td>
+                                                    <div>
+                                                        <a data-toggle="modal" data-target="#DeleteConfirmationModal" onclick="confirmDeleteModalForUserStore('@item.Id')" class="btn btn-danger shadow btn-xs sharp" style="width: 80px;"> حذف <i style="color: #fff; cursor: pointer" class="fa fa-trash"></i></a>
+                                                        @* <a data-modal- class="btn btn-primary" data-toggle="modal" data-target="#DeleteConfimationModal" data-attr="http://127.0.0.1:8000/admin2/driver/delete/106" class="btn btn-danger shadow btn-xs sharp"><i style="color: #fff; cursor: pointer" class="fa fa-trash"></i></a> *@
+
+                                                    </div>
+
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+
+
+                            </div>
+
+                        </div>
+
+                        <!-- /.card-body -->
+
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+            <!-- /.row (main row) -->
+        </div>
+
+    </div>
+}
+
+@{
+    Html.RenderPartial("_sweetAlert");
+}
+

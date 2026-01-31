@@ -1,0 +1,141 @@
+﻿@using DrugStockWeb.Helper
+@using DrugStockWeb.Models.Constanct
+@using DrugStockWeb.Models.Constancts
+@using DrugStockWeb.Models.StoreReceipt
+@using DrugStockWeb.Utitlities
+@using Microsoft.AspNet.Identity
+@model List<DrugStockWeb.Models.StoreReceipt.StoreReceiptReturn>
+<div class="card-body p-0">
+    <table class="table table-striped table-responsive-sm text-center">
+        <thead>
+            <tr>
+                @* <th>عنوان</th> *@
+                <th>انبار</th>
+                <th>شماره رسید</th>
+                <th>شماره فاکتور</th>
+                <th>تاریخ رسید</th>
+                <th>فروشنده</th>
+                <th>جمع مبلغ خرید</th>
+                <th>کاربر ایجاد کننده</th>
+                <th>وضعیت</th>
+                <th>عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                long sumBuyTotal = 0;
+                long sumSellTotal = 0;
+
+
+                foreach (var item in Model)
+                {
+                    <tr>
+
+                        @* <td>@(item.Title )</td> *@
+                        <td>@(item.StoreReceipt.Store.Title)</td>
+                        <td>@(item.StoreReceipt.ReceiptNumber)</td>
+                        <td>@(item.StoreReceipt.FactorNumber)</td>
+                        <td>@item.ReceiptReturnDate.ToShamsi(PersianDateTimeFormat.Date)</td>
+                        <td>@(item.StoreReceipt.BusinnessPartner.FirstName + " " + item.StoreReceipt.BusinnessPartner.LastName + (item.StoreReceipt.BusinnessPartner.BusinnessPartnerGroup.BusinnessPartnerLegalTypeId != BusinnessPartnerLegalTypeValues.Haghighi ? "(" + item.StoreReceipt.BusinnessPartner.CompanyName + ")" : ""))</td>
+                        <td>
+                            @{
+                                long sumBuy = 0;
+                                var sum = (item.StoreReceiptDetailReturns.AsEnumerable() ?? Array.Empty<StoreReceiptDetailReturn>()).GroupBy(p => p.StoreReceiptReturnId).Select(a => new
+                                {
+                                    amount = a.Sum(p => (p.Count * p.StoreReceiptDetail.BuyPrice))
+                                }).ToList();
+                                if (sum.Count > 0)
+                                {
+                                    sumBuy = sum[0].amount;
+                                }
+                            }
+
+                            @sumBuy.ToString().Cur()
+                            @{
+                                sumBuyTotal += sumBuy;
+                            }
+                        </td>
+
+                        <td>@item.CreatorUser.FirstName @item.CreatorUser.LastName</td>
+                        <td>@(item.IsConfirmed ? "تائید شده" : "در انتظار تائید")</td>
+
+                        <td>
+                            <div>
+                                <a href="@Url.Action("ReturnStoreReceipt",new {storeReceiptId= item.StoreReceipt.Id })" title="ویرایش رسید مرجوعی" class="btn btn-success shadow btn-xs sharp mr-1"><i class="fa fa-edit" style="cursor: pointer; color: white"></i></a>
+
+                                @if (!item.IsConfirmed)
+                                {
+
+                                    <a data-toggle="modal" data-target="#DeleteConfirmationModal" title="حذف" onclick="confirmDeleteModal('@item.Id')" style="margin-left: 3px;" class="btn btn-danger shadow btn-xs sharp"><i style="color: #fff; cursor: pointer" class="fa fa-trash"></i></a>
+                                }
+                                @if (!item.IsConfirmed && PermissionHelper.HasPermission(PermissionValue.ConfirmStoreReceiptReturn, User.Identity.GetUserId()))
+                                {
+                                    <a data-toggle="modal" data-target="#DeleteConfirmationModal" title="تائید رسید مرجوعی" onclick="confirmStoreReceiptReturnModal('@item.Id')" class="btn btn-info shadow btn-xs sharp"><i style="color: #fff; cursor: pointer" class="fa fa-check"></i></a>
+                                }
+                                
+                                @* <a data-modal- class="btn btn-primary" data-toggle="modal" data-target="#DeleteConfimationModal" data-attr="http://127.0.0.1:8000/admin2/driver/delete/106" class="btn btn-danger shadow btn-xs sharp"><i style="color: #fff; cursor: pointer" class="fa fa-trash"></i></a> *@
+
+                            </div>
+
+                        </td>
+                    </tr>
+                }
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>جمع</td>
+
+                    <td>
+                        @sumBuyTotal.ToString().Cur()
+                    </td>
+                    <td>
+                        @sumSellTotal.ToString().Cur()
+                    </td>
+                    <td></td>
+                    <td></td>
+
+                    <td>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-center">
+        <nav class="table-responsive">
+            <ul class="pagination justify-content-center d-flex flex-wrap">
+                @if (ViewBag.Page > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" onclick="SearchStoreReceiptReturn(1)">اولین</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" onclick="SearchStoreReceiptReturn(@(ViewBag.Page - 1))">قبلی</a>
+                    </li>
+                }
+
+                @for (int i = 1; i <= ViewBag.PageCount; i++)
+
+                {
+                    <li class="page-item @(i == ViewBag.Page ? "active" : "")">
+                        <a class="page-link" onclick="SearchStoreReceiptReturn(@i);">@i</a>
+                    </li>
+                }
+
+                @if (ViewBag.Page < ViewBag.PageCount)
+                {
+                    <li class="page-item">
+                        <a class="page-link" onclick="SearchStoreReceiptReturn(@(ViewBag.Page + 1))">بعدی</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" onclick="SearchStoreReceiptReturn(@(ViewBag.PageCount))">آخرین</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+
+
+</div>
+

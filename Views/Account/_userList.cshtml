@@ -1,0 +1,69 @@
+﻿@using DrugStockWeb.Models.Constancts
+@using DrugStockWeb.Utitlities
+@model List<DrugStockWeb.Models.Account.User>
+<div class="card-body p-0">
+    <table class="table table-striped table-responsive-sm text-center">
+        <thead>
+            <tr>
+                <th>نام</th>
+                <th>نام خانودگی</th>
+                <th>نام کاربری</th>
+                <th>موبایل</th>
+                <th>ایمیل</th>
+                <th>روش احراز هویت</th>
+                <th>واحد مربوطه</th>
+                <th>نقش</th>
+                <th>وضعیت</th>
+                <th>عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                    <td>@(item.FirstName)</td>
+                    <td>@(item.LastName)</td>
+                    <td>@(item.UserName)</td>
+                    <td>@(item.Mobile)</td>
+                    <td>@(item.Email)</td>
+                    <td>@((!ViewBag.AuthentiocationMode)?"نام کاربری/رمز عبور":"نام کاربری/رمزعبور و احراز هویت دو مرحله ای")</td>
+                    <td>@(item.Department.Title)</td>
+                    <td>
+                        @if (item.Roles.Count > 0)
+                        {
+                            if (item.Roles != null)
+                            {
+                                @item.Roles.FirstOrDefault().Role.Name
+                            }
+                        }
+                        <td>@item.UserStatus.Title 
+                            </td>
+                    </td>
+                    <td>
+                        <div>
+                            <a href="@Url.Action("Register/" + item.Id)" class="btn btn-success shadow btn-xs sharp mr-1" style="width: 80px;"> ویرایش <i class="fa fa-edit" style="cursor: pointer; color: white"></i></a>
+                            <a href="@Url.Action("CreateUserStore/" + item.Id)" class="btn btn-dark shadow btn-xs sharp mr-1 " style="width: 80px;"> مجوز انبار<i class="fa fa-list" style="cursor: pointer; color: white"></i></a>
+
+                            <a data-toggle="modal" data-target="#DeleteConfirmationModal" onclick="confirmDeleteModalForUser('@item.Id')" class="btn btn-danger shadow btn-xs sharp" style="width: 80px;"> حذف <i style="color: #fff; cursor: pointer" class="fa fa-trash"></i></a>
+                            @if (item.UserStatusId == (int)UserStatusValue.Activated || item.UserStatusId == (int)UserStatusValue.TempBlocked)
+                            {
+                                <a data-toggle="modal" data-target="#DeleteConfirmationModal" onclick="confirmUnActiveModalForUser('@item.Id')" class="btn btn-google-plus shadow btn-xs sharp" style="width: 80px;"> غیرفعال <i style="color: #fff; cursor: pointer" class="fa fa-chair"></i></a>
+                            }
+                            @if (item.UserStatusId == (int)UserStatusValue.UnActivated || item.UserStatusId == (int)UserStatusValue.TempBlocked)
+                            {
+                                <a data-toggle="modal" data-target="#DeleteConfirmationModal" onclick="confirmActiveModalForUser('@item.Id')" class="btn btn-twitter shadow btn-xs sharp" style="width: 80px;"> فعال <i style="color: #fff; cursor: pointer" class="fa fa-check"></i></a>
+                            }
+
+                            @* <a data-modal- class="btn btn-primary" data-toggle="modal" data-target="#DeleteConfimationModal" data-attr="http://127.0.0.1:8000/admin2/driver/delete/106" class="btn btn-danger shadow btn-xs sharp"><i style="color: #fff; cursor: pointer" class="fa fa-trash"></i></a> *@
+
+                        </div>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+</div>

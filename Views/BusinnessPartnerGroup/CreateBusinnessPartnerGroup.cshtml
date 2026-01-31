@@ -1,0 +1,135 @@
+﻿@using DrugStockWeb.Models.BusinessPartner
+@model DrugStockWeb.ViewModels.BusinnessPartner.CreateBusinnessPartnerGroupViewModel
+
+@{
+    ViewBag.Title = "ایجاد گروه طرف حساب جدید";
+}
+@using (Html.BeginForm("CreateBusinnessPartnerGroup", "BusinnessPartnerGroup", FormMethod.Post, new { role = "form", @class = "form-horizontal", autocomplete = "off", id = "CreateStoreForm", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(p => p.Id)
+    <style>
+        .required:before {
+            content: "* ";
+            color: red;
+        }
+    </style>
+    <div class="panel panel-default">
+
+
+
+        <div class="panel-heading">
+            <div class="row">
+
+                <div class="col-md-12">
+
+                    <table class="model-state">
+                        @foreach (var item in ViewContext.ViewData.ModelState)
+                        {
+                            if (item.Value.Errors.Any())
+                            {
+                                <tr>
+                                    @if (@item.Key == "public")
+                                    {
+                                        <td>
+                                            <div class="alert alert-danger  margin-bottom-0"
+                                                 style="margin-bottom: 5px;">
+                                                @(string.Join("; ", item.Value.Errors.Select(x => x.ErrorMessage)))
+                                            </div>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        }
+                    </table>
+
+                    <br>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="panel-body">
+            @* <ul class="nav nav-tabs"> *@
+            @*     <li class="active"> *@
+            @*         <a href="#baseInfo" data-toggle="tab">اطلاعات پایه</a> *@
+            @*     </li> *@
+            @* </ul> *@
+
+
+            <div class="tab-content">
+                <div class="tab-pane active" id="baseInfo">
+                    <div class="row" style="margin-top: 15px; padding-right: 30px;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(p => p.BusinnessPartnerLegalTypeId, new { @class = "control-label col-md-4 required" })
+                                    <div>
+                                        @Html.DropDownListFor(p => p.BusinnessPartnerLegalTypeId, Model.BusinnessPartnerLegalTypeList,  new {  @id = "DropDownProductGroup", @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.BusinnessPartnerLegalTypeId, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group ">
+                                    @Html.LabelFor(p => p.Title, new { @class = "control-label col-md-3 required" })
+
+                                    <div>
+                                        @Html.TextBoxFor(p => p.Title, new { @class = "form-control " })
+                                        @Html.ValidationMessageFor(p => p.Title, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group ">
+                                    @Html.LabelFor(p => p.SellWithBuyPrice, new { @class = "control-label col-md-3 required" })
+
+                                    <div>
+                                        <select name="SellWithBuyPrice" id="SellWithBuyPrice" class="form-control">
+                                            <option value="false">خیر</option>
+                                            <option @(Model.SellWithBuyPrice ? "selected=\"selected\"" : "") value="true">بله</option>
+                                        </select>
+                                        @Html.ValidationMessageFor(p => p.SellWithBuyPrice, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(p => p.BusinnessPartnerStatusId, new { @class = "control-label col-md-4 required" })
+                                    <div>
+                                        @Html.DropDownListFor(p => p.BusinnessPartnerStatusId, new SelectList(ViewBag.BusinnessPartnerStatusList),  new {  @id = "DropDownProductGroup", @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.BusinnessPartnerStatusId, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="panel-footer">
+            <div style="float: right !important; margin-right: 40px;">
+                @* ReSharper disable once UnknownCssClass *@
+                <button type="submit" autocomplete="off" onclick="AjaxForm.CustomSubmit(this, 'CreateVehicleForm')" data-loading-text="در حال ارسال اطلاعات" class="btn btn-success btn-md">
+                    ذخیره
+                </button>
+                @* ReSharper disable once UnknownCssClass *@
+                <a href="@Url.Action("Index", "Home")" class="btn btn-primary btn-md">انصراف</a>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+
+
+    </div>
+}
+

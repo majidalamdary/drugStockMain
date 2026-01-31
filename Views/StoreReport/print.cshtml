@@ -1,0 +1,53 @@
+﻿
+@using DevExpress.Web.Mvc.UI
+@model DevExpress.XtraReports.UI.XtraReport
+
+@{
+    Layout = null;
+}
+
+@* <link href="~/node_modules/devextreme-dist/css/dx.light.css" type="text/css" rel="Stylesheet" /> *@
+@* <link href="~/node_modules/devexpress-reporting/dist/css/dx-webdocumentviewer.css" type="text/css" rel="Stylesheet" /> *@
+
+<script src="~/Scripts/jquery.min.js" type="text/javascript"></script>
+<script src="~/Scripts/knockout-latest.js" type="text/javascript"></script>
+
+@* <script src="~/node_modules/devextreme-dist/js/dx.all.js" type="text/javascript"></script> *@
+
+
+@Html.DevExpress().GetStyleSheets(
+    new StyleSheet { ExtensionSuite = ExtensionSuite.NavigationAndLayout },
+    new StyleSheet { ExtensionSuite = ExtensionSuite.Report }
+    )
+@Html.DevExpress().GetScripts(
+    new Script { ExtensionSuite = ExtensionSuite.Report }
+    )
+@* *@
+
+@Html.DevExpress().WebDocumentViewer(settings =>
+{
+    settings.Name = "documentViewer";
+    settings.DisableHttpHandlerValidation = true;
+}).Bind(Model).GetHtml();
+
+<script type="text/javascript">
+    function removeExportButtons() {
+        const checkInterval = setInterval(function () {
+            var exportBtn = document.querySelector("[title='Export To']");
+            if (exportBtn) {
+                exportBtn.style.display = "none"; // Hide the export button
+                clearInterval(checkInterval);
+            }
+            exportBtn = document.querySelector("[title='Export Options']");
+            if (exportBtn) {
+                exportBtn.style.display = "none"; // Hide the export button
+                clearInterval(checkInterval);
+            }
+        }, 1000); // Wait for viewer to load
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        removeExportButtons();
+    });
+</script>

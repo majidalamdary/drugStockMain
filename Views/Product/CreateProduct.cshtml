@@ -1,0 +1,179 @@
+﻿@model DrugStockWeb.ViewModels.Product.CreateProductViewModel
+@{
+    ViewBag.Title = "ایجاد محصول جدید";
+}
+@using (Html.BeginForm("CreateProduct", "Product", FormMethod.Post, new { role = "form", @class = "form-horizontal", autocomplete = "off", id = "CreateProductForm", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(p => p.Id)
+    <style>
+        .required:before {
+            content: "* ";
+            color: red;
+        }
+    </style>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="row">
+
+                <div class="col-md-12">
+
+                    <table class="model-state">
+                        @foreach (var item in ViewContext.ViewData.ModelState)
+                        {
+                            if (item.Value.Errors.Any())
+                            {
+                                <tr>
+                                    @if (@item.Key == "public")
+                                    {
+                                        <td>
+                                            <div class="alert alert-danger  margin-bottom-0"
+                                                 style="margin-bottom: 5px;">
+                                                @(string.Join("; ", item.Value.Errors.Select(x => x.ErrorMessage)))
+                                            </div>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        }
+                    </table>
+
+                    <br>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="panel-body">
+            @* <ul class="nav nav-tabs"> *@
+            @*     <li class="active"> *@
+            @*         <a href="#baseInfo" data-toggle="tab">اطلاعات پایه</a> *@
+            @*     </li> *@
+            @* </ul> *@
+
+
+            <div class="tab-content">
+                <div class="tab-pane active" id="baseInfo">
+                    <div class="row" style="margin-top: 15px; padding-right: 30px;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group ">
+                                    @Html.LabelFor(p => p.Title, new { @class = "control-label col-md-3 required" })
+
+                                    <div>
+                                        @Html.TextBoxFor(p => p.Title, new { @class = "form-control " })
+                                        @Html.ValidationMessageFor(p => p.Title, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(p => p.GenericCode, new { @class = "control-label col-md-3 " })
+                                    <div>
+                                        @Html.TextBoxFor(p => p.GenericCode, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(p => p.GenericCode, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(p => p.MinimumCount, new { @class = "control-label col-md-3 " })
+                                    <div>
+                                        @Html.TextBoxFor(p => p.MinimumCount, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(p => p.MinimumCount, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(p => p.MaximumCount, new { @class = "control-label col-md-3 " })
+                                    <div>
+                                        @Html.TextBoxFor(p => p.MaximumCount, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(p => p.MaximumCount, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(p => p.SellPriceText, new { @class = "control-label col-md-3 " })
+                                    <div>
+                                        @Html.TextBox("SellPriceText",  Model.SellPriceText , new { @class = "form-control", @onkeyup = "this.value = add_commas(this.value);" })
+                                        @Html.ValidationMessageFor(p => p.SellPriceText, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(p => p.ProductGroupId, new { @class = "control-label col-md-4 required" })
+                                    <div>
+                                        @Html.DropDownListFor(p => p.ProductGroupId, Model.ProductGroupList,  new { @onchange = "FillProductSubGroup()", @id = "DropDownProductGroup", @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.ProductGroupId, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(p => p.ProductSubGroupId, new { @class = "control-label col-md-4 required" })
+                                    <div>
+                                        @Html.DropDownListFor(p => p.ProductSubGroupId, Model.ProductSubGroupList, "انتخاب کنید", new {  @id = "DropDownProductSubGroup", @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.ProductSubGroupId, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(p => p.ProductTypeId, new { @class = "control-label col-md-6  required" })
+                                    <div>
+                                        @Html.DropDownListFor(p => p.ProductTypeId, Model.ProductTypeList, "انتخاب کنید", new {  @id = "DropDownProductType", @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.ProductTypeId, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(p => p.StoreId, new { @class = "control-label col-md-6 required" })
+                                    <div>
+                                        @Html.DropDownListFor(p => p.StoreId, Model.StoreList, "انتخاب کنید", new { @id = "DropDownCityId", @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.StoreId, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(p => p.ManufactureId, new { @class = "control-label col-md-6 required" })
+                                    <div>
+                                        @Html.DropDownListFor(p => p.ManufactureId, Model.ManudactureList, "انتخاب کنید", new {  @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.ManufactureId, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="panel-footer">
+            <div style="float: right !important; margin-right: 40px;">
+                @* ReSharper disable once UnknownCssClass *@
+                <button type="submit" autocomplete="off" onclick="AjaxForm.CustomSubmit(this, 'CreateVehicleForm')" data-loading-text="در حال ارسال اطلاعات" class="btn btn-success btn-md">
+                    ذخیره
+                </button>
+                @* ReSharper disable once UnknownCssClass *@
+                <a href="@Url.Action("Index", "Home")" class="btn btn-primary btn-md">انصراف</a>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+
+
+    </div>
+}
+

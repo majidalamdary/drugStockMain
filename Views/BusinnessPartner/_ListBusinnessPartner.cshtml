@@ -1,0 +1,119 @@
+﻿@model List<DrugStockWeb.Models.BusinessPartner.BusinnessPartner>
+@using System.ComponentModel.DataAnnotations
+@using DrugStockWeb.Helper
+@using DrugStockWeb.Models.BusinessPartner
+@using DrugStockWeb.Models.Constanct
+@using DrugStockWeb.Models.Constancts
+@using DrugStockWeb.Utitlities
+@using Microsoft.AspNet.Identity
+<div class="card-body p-0">
+
+    <table class="table table-striped table-responsive-sm text-center">
+        <thead>
+            <tr>
+                <th>نام طرف حساب</th>
+                <th>گروه طرف حساب</th>
+                <th>موبایل</th>
+                <th>کدملی</th>
+                <th>نام همراه</th>
+                <th>موبایل همراه</th>
+                <th>گروه</th>
+                <th>وضعیت پرونده</th>
+                <th>کاربر ایجاد کننده</th>
+                <th>عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+
+
+                <tr>
+                    @if (item.BusinnessPartnerGroup.BusinnessPartnerLegalTypeId == BusinnessPartnerLegalTypeValues.Haghighi)
+                    {
+                        <td>@(item.FirstName + " " + item.LastName)</td>
+
+                    }
+                    else
+                    {
+                        <td>@(item.CompanyName + " ("+ item.FirstName + " " + item.LastName + ")")</td>    
+                    }
+                    
+                    <td>@(item.BusinnessPartnerGroup.Title)</td>
+                    <td>@(item.Mobile)</td>
+                    <td>@(item.MelliCode)</td>
+                    <td>@(item.HamrahFirstName + " " + item.HamrahLastName)</td>
+                    <td>@(item.HamrahMobile)</td>
+                    <td>@(item.BusinnessPartnerGroup.Title)</td>
+                    @if (!item.IsArchived)
+                    {
+                        <td>فعال</td>
+                    }
+                    else
+                    {
+                        <td>@("بایگانی شده (" + item.ArchiveTypeId.GetAttribute<DisplayAttribute>().Name+")")</td>
+
+                    }
+
+                    <td>@item.CreatorUser.FirstName @item.CreatorUser.LastName</td>
+                    <td>
+                        <div>
+
+                            @if (PermissionHelper.HasPermission(PermissionValue.CanArchiveBusinnessPartner, User.Identity.GetUserId())  && !item.IsArchived)
+                            {
+                                <a  data-toggle="modal" data-target="#ArchiveModal" title="بایگانی" onclick="ArchiveFileModal('@item.Id')" class="btn btn-default shadow btn-xs sharp mr-1" style="background-color: coral"><i class="fa fa-archive" style="cursor: pointer; color: white"></i></a>
+                            }
+                            @if (PermissionHelper.HasPermission(PermissionValue.CanUnArchiveBusinnessPartner, User.Identity.GetUserId())  && item.IsArchived)
+                            {
+                                <a  data-toggle="modal" data-target="#UnArchiveModal" title="خروج از بایگانی" onclick="UnArchiveFileModal('@item.Id')" class="btn btn-default shadow btn-xs sharp mr-1" style="background-color: cyan"><i class="fa fa-archive" style="cursor: pointer; color: white"></i></a>
+                            }
+
+                            <a href="@Url.Action("CreateBusinnessPartner/" + item.Id)" title="ویرایش" class="btn btn-success shadow btn-xs sharp mr-1"><i class="fa fa-edit" style="cursor: pointer; color: white"></i></a>
+                            <a data-toggle="modal" data-target="#DeleteConfirmationModal" title="حذف" onclick="confirmDeleteModal('@item.Id')" class="btn btn-danger shadow btn-xs sharp"><i style="color: #fff; cursor: pointer" class="fa fa-trash"></i></a>
+                            @* <a data-modal- class="btn btn-primary" data-toggle="modal" data-target="#DeleteConfimationModal" data-attr="http://127.0.0.1:8000/admin2/driver/delete/106" class="btn btn-danger shadow btn-xs sharp"><i style="color: #fff; cursor: pointer" class="fa fa-trash"></i></a> *@
+
+                        </div>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-center">
+        <nav class="table-responsive">
+            <ul class="pagination justify-content-center d-flex flex-wrap">
+                @if (ViewBag.Page > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" onclick="SearchBusinnessPartner(1)">اولین</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" onclick="SearchBusinnessPartner(@(ViewBag.Page - 1))">قبلی</a>
+                    </li>
+                }
+
+                @for (int i = 1; i <= ViewBag.PageCount; i++)
+
+                {
+                    <li class="page-item @(i == ViewBag.Page ? "active" : "")">
+                        <a class="page-link" onclick="SearchBusinnessPartner(@i);">@i</a>
+                    </li>
+                }
+
+                @if (ViewBag.Page < ViewBag.PageCount)
+                {
+                    <li class="page-item">
+                        <a class="page-link" onclick="SearchBusinnessPartner(@(ViewBag.Page + 1))">بعدی</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" onclick="SearchBusinnessPartner(@(ViewBag.PageCount))">آخرین</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+
+
+</div>
+

@@ -1,0 +1,91 @@
+﻿@model DrugStockWeb.ViewModels.Home.HomePageViewModel
+@{
+    Layout = null;
+}
+<nav class="navbar navbar-expand">
+    <div class="collapse navbar-collapse justify-content-between">
+        <div class="header-left">
+        </div>
+
+        <ul class="navbar-nav header-right">
+            <li class="nav-item dropdown notification_dropdown">
+                <a class="nav-link bell dz-fullscreen" href="#">
+                    <svg id="icon-full" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+                        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" style="stroke-dasharray: 37px, 57px; stroke-dashoffset: 0px;"></path>
+                    </svg>
+                    <svg id="icon-minimize" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-minimize">
+                        <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" style="stroke-dasharray: 37px, 57px; stroke-dashoffset: 0px;"></path>
+                    </svg>
+                </a>
+            </li>
+            @* <li class="nav-item dropdown notification_dropdown"> *@
+            @*     <a class="nav-link bell ai-icon" href="#" role="button" data-toggle="dropdown"> *@
+            @*         <svg id="icon-user" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bell"> *@
+            @*             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" style="stroke-dasharray: 57px, 77px; stroke-dashoffset: 0px;"></path> *@
+            @*             <path d="M13.73 21a2 2 0 0 1-3.46 0" style="stroke-dasharray: 5px, 25px; stroke-dashoffset: 0px;"></path> *@
+            @*         </svg> *@
+            @*     </a> *@
+            @*     <div class="dropdown-menu dropdown-menu-right"> *@
+            @*         <div id="DZ_W_Notification1" class="widget-media dz-scroll p-3 ps" style="height: 300px;"> *@
+            @*             <ul class="timeline"> *@
+            @*             </ul> *@
+            @*             <div class="ps__rail-x" style="left: 0px; bottom: 0px;"> *@
+            @*                 <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div> *@
+            @*             </div> *@
+            @*             <div class="ps__rail-y" style="top: 0px; left: -4px;"> *@
+            @*                 <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div> *@
+            @*             </div> *@
+            @*         </div> *@
+            @*         <a class="all-notification" href="https://test.maliyaar.ir/dashboard/notification" style="text-decoration: none;"> *@
+            @*             مشاهده همه اعلان ها *@
+            @*             <i class="ti-arrow-right"></i> *@
+            @*         </a> *@
+            @*     </div> *@
+            @* </li> *@
+            <li class="nav-item dropdown header-profile">
+                <a class="nav-link" href="#" role="button" data-toggle="dropdown">
+                    <svg class="svg-inline--fa fa-user fa-w-14" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="user" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z"></path></svg><!-- <div class="fa fa-user "></div> Font Awesome fontawesome.com -->
+                    <div class="header-info">
+                        <span> <strong> @Model.UserFirstName @Model.UserLastName (@Model.Role) </strong></span>
+                        <small></small>
+                    </div>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right">
+
+
+                    @* <a href="" class="dropdown-item ai-icon"> *@
+                    @*     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-key" viewBox="0 0 16 16"> *@
+                    @*         <path d="M0 8a4 4 0 0 1 7.465-2H14a.5.5 0 0 1 .354.146l1.5 1.5a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0L13 9.207l-.646.647a.5.5 0 0 1-.708 0L11 9.207l-.646.647a.5.5 0 0 1-.708 0L9 9.207l-.646.647A.5.5 0 0 1 8 10h-.535A4 4 0 0 1 0 8zm4-3a3 3 0 1 0 2.712 4.285A.5.5 0 0 1 7.163 9h.63l.853-.854a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.793-.793-1-1h-6.63a.5.5 0 0 1-.451-.285A3 3 0 0 0 4 5z"></path> *@
+                    @*         <path d="M4 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"></path> *@
+                    @*     </svg> *@
+                    @*     <span class="ml-2">تغییر رمز عبور </span> *@
+                    @* </a> *@
+
+
+
+
+                    <form method="POST" action="@Url.Action("LogOff", "Account")">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="_token" value="pzYCbGhjMiGlWIhWyD7JfOBqJnLsg3gRlvFBXquj" autocomplete="off">
+                        <a class="dropdown-item ai-icon" onclick="event.preventDefault();this.closest('form').submit();">
+                            <svg class="svg-inline--fa fa-sign-out-alt fa-w-16" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="sign-out-alt" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M497 273L329 441c-15 15-41 4.5-41-17v-96H152c-13.3 0-24-10.7-24-24v-96c0-13.3 10.7-24 24-24h136V88c0-21.4 25.9-32 41-17l168 168c9.3 9.4 9.3 24.6 0 34zM192 436v-40c0-6.6-5.4-12-12-12H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h84c6.6 0 12-5.4 12-12V76c0-6.6-5.4-12-12-12H96c-53 0-96 43-96 96v192c0 53 43 96 96 96h84c6.6 0 12-5.4 12-12z"></path></svg><!-- <i class="fas fa-sign-out-alt" aria-hidden="true"></i> Font Awesome fontawesome.com -->
+                            خروج
+                        </a>
+                    </form>
+                </div>
+            </li>
+
+
+
+
+
+
+
+
+
+
+
+        </ul>
+    </div>
+</nav>
+

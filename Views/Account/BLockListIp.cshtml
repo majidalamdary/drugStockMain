@@ -1,0 +1,111 @@
+﻿@model List<DrugStockWeb.Models.Common.BlackListIp>
+
+@{
+    ViewBag.Title = "لیست آی پی غیرمجاز";
+
+}
+<!-- Modal -->
+<div class="modal fade" id="DeleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                آیا مطمئن هستید؟
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">بستن</button>
+                <button type="button" class="btn btn-primary" id="confirmDelete">بله حتما</button>
+            </div>
+        </div>
+    </div>
+</div>
+@* <button type="button" data-modal- class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"> *@
+@*     Launch demo modal *@
+@* </button> *@
+@* <button type="button" class="btn btn-danger"  data-toggle="modal" data-target="#DeleteConfirmationModal" *@
+@* onclick="confirmDeleteModal('10')">Delete Item id 10</button> *@
+
+<div class="container-fluid">
+@using (Html.BeginForm("BLockListIp", "Account", FormMethod.Post, new { role = "form", @class = "form-horizontal", autocomplete = "off", id = "CreateStoreForm", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="panel-body">
+        @* <ul class="nav nav-tabs"> *@
+        @*     <li class="active"> *@
+        @*         <a href="#baseInfo" data-toggle="tab">اطلاعات پایه</a> *@
+        @*     </li> *@
+        @* </ul> *@
+
+
+        <div class="tab-content">
+            <div class="tab-pane active" id="baseInfo">
+                <div class="row" style="margin-top: 15px; padding-right: 30px;">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group ">
+                                <label class="control-label col-md-5 required">آی پی </label>
+
+                                <div>
+                                    @Html.TextBox("Ip", "", new { @class = "form-control " })
+                                    @Html.ValidationMessage("Ip", "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="panel-footer">
+        <div style="float: right !important; margin-right: 40px;">
+            @* ReSharper disable once UnknownCssClass *@
+            <button type="submit" autocomplete="off" onclick="AjaxForm.CustomSubmit(this, 'CreateVehicleForm')" data-loading-text="در حال ارسال اطلاعات" class="btn btn-success btn-md">
+                ذخیره
+            </button>
+            @* ReSharper disable once UnknownCssClass *@
+            <a href="@Url.Action("Index", "Home")" class="btn btn-primary btn-md">انصراف</a>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    }
+    <div class="row" style="margin-top: 30px;">
+        <div class="col-md-12">
+            <div class="card">
+                @* <a href="@Url.Action("Register")" class="btn btn-success" style="width: 250px; margin: 20px;"><li class="fa fa-plus-circle" style="margin-left: 5px;"> </li>ایجاد کاربر جدید</a> *@
+                <div class="card-header bg-primary" style="text-align: center">
+                    <h3 class="card-title text-white">لیست آی پی های غیرمجاز</h3>
+                </div>
+                <div id="UserList">
+                    @{
+                        Html.RenderPartial("_BlackListIp", Model);
+                    }
+                </div>
+
+                <!-- /.card-body -->
+
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+    <!-- /.row (main row) -->
+</div>
+
+<div>
+
+</div>
+@* <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script> *@
+
+
+
+@{
+    Html.RenderPartial("_sweetAlert");
+}

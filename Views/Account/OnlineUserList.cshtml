@@ -1,0 +1,88 @@
+﻿@model List<DrugStockWeb.Models.Account.OnlineUser>
+
+@{
+    ViewBag.Title = "لیست کاربران آنلاین ";
+
+}
+<!-- Modal -->
+<div class="modal fade" id="DeleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                آیا مطمئن هستید؟
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">بستن</button>
+                <button type="button" class="btn btn-primary" id="confirmDelete">بله حتما</button>
+            </div>
+        </div>
+    </div>
+</div>
+@* <button type="button" data-modal- class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"> *@
+@*     Launch demo modal *@
+@* </button> *@
+@* <button type="button" class="btn btn-danger"  data-toggle="modal" data-target="#DeleteConfirmationModal" *@
+@* onclick="confirmDeleteModal('10')">Delete Item id 10</button> *@
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                @* <a href="@Url.Action("Register")" class="btn btn-success" style="width: 250px; margin: 20px;"><li class="fa fa-plus-circle" style="margin-left: 5px;"> </li>ایجاد کاربر جدید</a> *@
+                @if (ViewBag.ActiveMessage == "activated")
+                {
+                    <div class="row">
+                        <div class="col-md-12">
+
+
+                            <div class="alert alert-info help-alert margin-bottom-0"
+                                 style="background-color: #8fbc8f; margin-bottom: 15px;color: red">
+                                @*<img src="/Content/Images/logo_light.png">*@
+                                <span>
+
+                                    <label>کاربر با موفقیت فعال شد</label>
+
+                                </span>
+
+                                <br>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                }
+                <div class="card-header bg-primary" style="text-align: center">
+                    <h3 class="card-title text-white">لیست کاربران آنلاین</h3>
+                </div>
+                <div id="UserList">
+                    @{
+                        Html.RenderPartial("_onlineUserList", Model);
+                    }
+                </div>
+
+                <!-- /.card-body -->
+
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+    <!-- /.row (main row) -->
+</div>
+
+<div>
+
+</div>
+@* <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script> *@
+
+
+
+@{
+    Html.RenderPartial("_sweetAlert");
+}

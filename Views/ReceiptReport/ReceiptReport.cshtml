@@ -1,0 +1,117 @@
+﻿@model DrugStockWeb.ViewModels.ReceiptReport.ReceiptReportViewModel
+
+@{
+    ViewBag.Title = "گزارش رسید انبار";
+
+}
+<!-- Modal -->
+
+@* <button type="button" data-modal- class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"> *@
+@*     Launch demo modal *@
+@* </button> *@
+@* <button type="button" class="btn btn-danger"  data-toggle="modal" data-target="#DeleteConfirmationModal" *@
+@* onclick="confirmDeleteModal('10')">Delete Item id 10</button> *@
+
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+
+
+                    <div id="default_collapseOne" class=" accordion__body " data-parent="#accordion-one">
+                        @using (Html.BeginForm(FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div style="margin-top: 30px;" class="row form-material">
+                                <div class="col-xl-3 col-xxl-3 col-md-6 mb-3">
+                                    <p class="mb-1">نام انبار</p>
+                                    @Html.DropDownListFor(p => p.StoreId, Model.StoreList, new { @onchange = "FillProduct()", @class = "form-control" })
+                                </div>
+                                <div class="col-xl-3 col-xxl-3 col-md-6 mb-3">
+                                    <p class="mb-1">کالا</p>
+                                    @Html.DropDownListFor(p => p.ProductId, Model.ProductList,"انتخاب کالا", new {  @class = "form-control" })
+                                </div>
+                                <div class="col-xl-3 col-xxl-3 col-md-2 mb-3">
+                                    <p class="mb-1">تاریخ رسید از</p>
+                                    <input autocomplete="off" autofill="off" type="text" class="form-control" value="" id="ReceiptDateFrom" name="ReceiptDateFrom">
+                                </div>
+                                <div class="col-xl-3 col-xxl-3 col-md-2 mb-3">
+                                    <p class="mb-1">تاریخ رسید تا</p>
+                                    <input autocomplete="off" autofill="off" type="text" class="form-control" value="" id="ReceiptDateTo" name="ReceiptDateTo">
+                                </div>
+                                <div class="col-xl-4 col-xxl-5 col-md-6 mb-3">
+                                    <div>
+                                        <p class="mb-1"> </p>
+
+                                        <button type="button" onclick="SearchReceiptReport(1);" value="sumbit" name="sumbit" style="margin-right: 15px;" class="btn btn-primary mb-3">اعمال فیلتر</button>
+                                        <a href="@Url.Action("ReceiptReport")" style="margin-right: 15px;" class="btn btn-outline-primary mb-3">حذف فیلتر</a>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-primary">
+                    <h3 class="card-title text-white">لیست حواله ها</h3>
+                </div>
+                <div id="ReceiptReportList">
+                    @{
+                        Html.RenderPartial("_receiptDetailReport", Model.ReceiptDetailReportList);
+                    }
+                </div>
+
+                <!-- /.card-body -->
+
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+    <!-- /.row (main row) -->
+</div>
+
+<div>
+
+</div>
+@* <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script> *@
+
+
+
+@{
+    Html.RenderPartial("_sweetAlert");
+}
+
+<script language="javascript">
+    $("#ReceiptDateFrom").persianDatepicker({
+        formatDate: "YYYY/MM/DD",
+        cellWidth: 40,
+        cellHeight: 40,
+        fontSize: 12,
+        selectedBefore: 1
+    });
+    $("#ReceiptDateFrom").val("");
+    $("#ReceiptDateTo").persianDatepicker({
+        formatDate: "YYYY/MM/DD",
+        cellWidth: 40,
+        cellHeight: 40,
+        fontSize: 12,
+        selectedBefore: 1
+    });
+    $("#ReceiptDateTo").val("");
+    $('#ProductId').select2({
+        allowClear: true
+    });
+</script>

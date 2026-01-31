@@ -1,0 +1,181 @@
+﻿@using DrugStockWeb.Helper
+@using DrugStockWeb.Models.Constanct
+@using DrugStockWeb.Models.Constancts
+@using DrugStockWeb.Models.StoreReceipt
+@using DrugStockWeb.Utitlities
+@using Microsoft.AspNet.Identity
+@model List<DrugStockWeb.Models.StoreReceipt.StoreReceipt>
+<div class="card-body p-0">
+    <table class="table table-striped table-responsive-sm text-center">
+        <thead>
+            <tr>
+                @* <th>عنوان</th> *@
+                <th>انبار</th>
+                <th>شماره رسید</th>
+                <th>شماره فاکتور</th>
+                <th>شماره درخواست</th>
+                <th>تاریخ رسید</th>
+                <th>فروشنده</th>
+                <th>جمع مبلغ(قیمت خرید)</th>
+                <th>جمع مبلغ(قیمت فروش)</th>
+                <th>کاربر ایجاد کننده</th>
+                <th>وضعیت</th>
+                <th>عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                long sumBuyTotal = 0;
+                long sumSellTotal = 0;
+
+
+                foreach (var item in Model)
+                {
+                    <tr>
+
+                        @* <td>@(item.Title )</td> *@
+                        <td>@(item.Store.Title)</td>
+                        <td>@(item.ReceiptNumber)</td>
+                        <td>@(item.FactorNumber)</td>
+                        <td>@(item.RequestNumber)</td>
+                        <td>@item.ReceiptDate.ToShamsi(PersianDateTimeFormat.Date)</td>
+                        <td>@(item.BusinnessPartner.FirstName + " " + item.BusinnessPartner.LastName + (item.BusinnessPartner.BusinnessPartnerGroup.BusinnessPartnerLegalTypeId != BusinnessPartnerLegalTypeValues.Haghighi ? "(" + item.BusinnessPartner.CompanyName + ")" : ""))</td>
+                        <td>
+                            @{
+                                long sumBuy = 0;
+                                var sum = (item.StoreReceiptDetails.AsEnumerable() ?? Array.Empty<StoreReceiptDetail>()).GroupBy(p => p.StoreReceiptId).Select(a => new
+                                {
+                                    amount = a.Sum(p => (p.Count * p.BuyPrice))
+                                }).ToList();
+                                if (sum.Count > 0)
+                                {
+                                    sumBuy = sum[0].amount;
+                                }
+                            }
+
+                            @sumBuy.ToString().Cur()
+                            @{
+                                sumBuyTotal += sumBuy;
+                            }
+                        </td>
+                        <td>
+                            @{
+                                long sumSell = 0;
+                                sum = (item.StoreReceiptDetails.AsEnumerable() ?? Array.Empty<StoreReceiptDetail>()).GroupBy(p => p.StoreReceiptId).Select(a => new
+                                {
+                                    amount = a.Sum(p => (p.Count * p.SellPrice))
+                                }).ToList();
+                                if (sum.Count > 0)
+                                {
+                                    sumSell = sum[0].amount;
+                                }
+                            }
+                            @sumSell.ToString().Cur()
+                            @{
+                                sumSellTotal += sumSell;
+                            }
+                        </td>
+                        <td>@item.CreatorUser.FirstName @item.CreatorUser.LastName</td>
+                        <td>@(item.IsConfirmed ? "تائید شده" : "در انتظار تائید")</td>
+
+                        <td>
+                            <div>
+                                <a target="_blank" title="چاپ رسید" href="@Url.Action("PrintReceipt",new {id= item.Id })"  class="btn btn-google shadow btn-xs sharp mr-1"><i class="fa fa-print" style="cursor: pointer; color: white"></i></a>
+
+                                <a href="@Url.Action("CreateStoreReceipt/" + item.Id)" title="ویرایش" class="btn btn-success shadow btn-xs sharp mr-1"><i class="fa fa-edit" style="cursor: pointer; color: white"></i></a>
+
+                                @if (!item.IsConfirmed)
+                                {
+
+                                    <a data-toggle="modal" data-target="#DeleteConfirmationModal" title="حذف" onclick="confirmDeleteModal('@item.Id')" style="margin-left: 3px;" class="btn btn-danger shadow btn-xs sharp"><i style="color: #fff; cursor: pointer" class="fa fa-trash"></i></a>
+                                }
+                                @if (!item.IsConfirmed && PermissionHelper.HasPermission(PermissionValue.ConfirmStoreReceipt, User.Identity.GetUserId()))
+                                {
+                                    <a data-toggle="modal" data-target="#DeleteConfirmationModal" title="تائید" onclick="confirmConfirmationModal('@item.Id')" class="btn btn-info shadow btn-xs sharp"><i style="color: #fff; cursor: pointer" class="fa fa-check"></i></a>
+                                }
+                                @if (item.IsConfirmed && PermissionHelper.HasPermission(PermissionValue.CreateStoreReceiptReturn, User.Identity.GetUserId()))
+                                {
+                                    <a href="@Url.Action("ReturnStoreReceipt", new { storeReceiptId = item.Id })" title="رسید مرجوعی" class="btn btn-google shadow btn-xs sharp mr-1"><i class="fa fa-recycle" style="cursor: pointer; color: white"></i></a>
+
+                                }
+                                @* <a data-modal- class="btn btn-primary" data-toggle="modal" data-target="#DeleteConfimationModal" data-attr="http://127.0.0.1:8000/admin2/driver/delete/106" class="btn btn-danger shadow btn-xs sharp"><i style="color: #fff; cursor: pointer" class="fa fa-trash"></i></a> *@
+
+                            </div>
+
+                        </td>
+                    </tr>
+                }
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>جمع</td>
+
+                    <td>
+                        @sumBuyTotal.ToString().Cur()
+                    </td>
+                    <td>
+                        @sumSellTotal.ToString().Cur()
+                    </td>
+                    <td></td>
+                    <td></td>
+
+                    <td>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-center">
+        <nav class="table-responsive">
+            <ul class="pagination justify-content-center d-flex flex-wrap">
+                @if (ViewBag.Page > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" onclick="SearchStoreReceipt(1)">اولین</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" onclick="SearchStoreReceipt(@(ViewBag.Page - 1))">قبلی</a>
+                    </li>
+                }
+
+                @{
+                    var maxPageCount = ViewBag.Page;
+                    var l = 1;
+                    for (int i = ViewBag.Page; i <= ViewBag.PageCount; i++)
+                    {
+                        maxPageCount = i;
+                        l++;
+                        if (l > 5)
+                        {
+                            break;
+                        }
+
+                    }
+                }
+
+                @for (int i = (ViewBag.Page > 2 ? ViewBag.Page - 2 : 1); i <= maxPageCount; i++)
+
+                {
+                    <li class="page-item @(i == ViewBag.Page ? "active" : "")">
+                        <a class="page-link" onclick="SearchStoreReceipt(@i);">@i</a>
+                    </li>
+                }
+                @if (ViewBag.Page < ViewBag.PageCount)
+                {
+                    <li class="page-item">
+                        <a class="page-link" onclick="SearchStoreReceipt(@(ViewBag.Page + 1))">بعدی</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" onclick="SearchStoreReceipt(@(ViewBag.PageCount))">آخرین</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+
+
+</div>
+

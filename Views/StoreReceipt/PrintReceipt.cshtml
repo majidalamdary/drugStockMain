@@ -1,0 +1,67 @@
+﻿@using DevExpress.Web.Mvc.UI
+@model DevExpress.XtraReports.UI.XtraReport
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Print Invoice Report</title>
+
+    @* Load DevExpress CSS for Reporting (Report + optional Navigation) *@
+    @Html.DevExpress().GetStyleSheets(
+        new StyleSheet { ExtensionSuite = ExtensionSuite.Report },
+        new StyleSheet { ExtensionSuite = ExtensionSuite.NavigationAndLayout }
+    )
+</head>
+<body>
+    @* jQuery must load BEFORE DevExpress reporting scripts *@
+    <script src="~/Scripts/jquery.min.js" type="text/javascript"></script>
+    @* <link href="~/node_modules/devextreme-dist/css/dx.light.css" type="text/css" rel="Stylesheet" /> *@ @* <link href="~/node_modules/devexpress-reporting/dist/css/dx-webdocumentviewer.css" type="text/css" rel="Stylesheet" /> *@
+    <script src="~/Scripts/jquery.min.js" type="text/javascript"></script>
+    <script src="~/Scripts/knockout-latest.js" type="text/javascript"></script> @* <script src="~/node_modules/devextreme-dist/js/dx.all.js" type="text/javascript"></script> *@
+    @* Load DevExpress reporting/viewer scripts (this generates DXR.axd references) *@
+    @Html.DevExpress().GetScripts(
+        new Script { ExtensionSuite = ExtensionSuite.Report }
+    )
+
+    @* ---------- Define global JS handlers BEFORE the viewer HTML is rendered ---------- *@
+    <script type="text/javascript">
+        // make sure they're globals on window so the viewer can call them by name
+        window.onCustomizeMenuActions = function (viewer, e) {
+            try {
+                // use DevExpress.Reporting.Viewer constants (they exist after DevExpress scripts loaded)
+                var exportAction = e.GetById(DevExpress.Reporting.Viewer.ActionId.ExportTo);
+                if (exportAction) exportAction.visible = false;
+            } catch (err) {
+                console.warn("onCustomizeMenuActions error:", err);
+            }
+        };
+
+        window.onCustomizeExportOptions = function (viewer, e) {
+            try {
+                e.HideExportOptionsPanel();
+            } catch (err) {
+                console.warn("onCustomizeExportOptions error:", err);
+            }
+        };
+    </script>
+
+    @* ---------- Now create settings and render the viewer  ---------- *@
+    @{
+        var viewerSettings = new DevExpress.Web.Mvc.WebDocumentViewerSettings();
+        viewerSettings.Name = "documentViewer";
+        viewerSettings.DisableHttpHandlerValidation = true;
+
+        // register by name (the functions above must exist as globals)
+        viewerSettings.ClientSideEvents.CustomizeMenuActions = "onCustomizeMenuActions";
+        viewerSettings.ClientSideEvents.CustomizeExportOptions = "onCustomizeExportOptions";
+    }
+
+    @Html.DevExpress().WebDocumentViewer(viewerSettings).Bind(Model).GetHtml()
+
+</body>
+</html>

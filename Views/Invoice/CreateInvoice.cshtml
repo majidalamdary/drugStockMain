@@ -1,0 +1,283 @@
+﻿@using DrugStockWeb.Helper
+@model DrugStockWeb.ViewModels.Invoice.CreateInvoiceViewModel
+
+@{
+    ViewBag.Title = "حواله انبار";
+}
+@using (Html.BeginForm("CreateInvoice", "Invoice", FormMethod.Post, new { role = "form", @class = "form-horizontal", autocomplete = "off", id = "CreateStoreReceiptForm", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(p => p.Id)
+    @Html.HiddenFor(p => p.IsNew)
+    <style>
+        .required:before {
+            content: "* ";
+            color: red;
+        }
+
+        .form-control {
+            height: 30px;
+            padding: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 5px;
+        }
+    </style>
+    <div class="modal fade" id="MyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="--bs-modal-width: 800px;" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    @* <button type="button" class="close" data-dismiss="modal" aria-label="Close"> *@
+                    @*     <span aria-hidden="true">&times;</span> *@
+                    @* </button> *@
+                </div>
+                <div class="modal-body">
+                    مجید
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">بستن</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="row">
+
+                <div class="col-md-12">
+
+                    <table class="model-state">
+                        @foreach (var item in ViewContext.ViewData.ModelState)
+                        {
+                            if (item.Value.Errors.Any())
+                            {
+                                <tr>
+                                    @if (@item.Key == "public")
+                                    {
+                                        <td>
+                                            <div class="alert alert-danger  margin-bottom-0"
+                                                 style="margin-bottom: 5px;">
+                                                @(string.Join("; ", item.Value.Errors.Select(x => x.ErrorMessage)))
+                                            </div>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        }
+                    </table>
+
+                    <br>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="panel-body">
+            @* <ul class="nav nav-tabs"> *@
+            @*     <li class="active"> *@
+            @*         <a href="#baseInfo" data-toggle="tab">اطلاعات پایه</a> *@
+            @*     </li> *@
+            @* </ul> *@
+
+
+            <div class="tab-content">
+                <div class="tab-pane active" id="baseInfo">
+                    <div class="row" style="margin-top: 15px; padding-right: 30px;font-size: smaller">
+                        <div class="row">
+                            @if (ViewBag.IsEdit == 0)
+                            {
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        @Html.LabelFor(p => p.StoreId, new { @class = "control-label col-md-6 required" })
+                                        <div>
+                                            @Html.DropDownListFor(p => p.StoreId, Model.StoreList, "انتخاب انبار", new { @onchange = "FillStoreReceipt()", @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.StoreId, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        @Html.LabelFor(p => p.StoreId, new { @class = "control-label col-md-6 required" })
+                                        <div>
+                                            <label style="font-size: larger">@ViewBag.StoreName</label>
+                                            @Html.HiddenFor(p => p.StoreId)
+                                        </div>
+                                    </div>
+                                </div>
+
+                            }
+                            <div class="col-md-3">
+                                <div class="form-group ">
+                                    @Html.LabelFor(p => p.FactorNumber, new { @class = "control-label col-md-6 required" })
+
+                                    <div>
+                                        @Html.TextBoxFor(p => p.FactorNumber, new { @class = "form-control ",@readonly="readonly" })
+                                        @Html.ValidationMessageFor(p => p.FactorNumber, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group ">
+                                    @Html.LabelFor(p => p.FactorDateShamsi, new { @class = "control-label col-md-6 required" })
+
+                                    <div>
+                                        @Html.TextBoxFor(p => p.FactorDateShamsi, new { @class = "form-control " })
+                                        @Html.ValidationMessageFor(p => p.FactorDateShamsi, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            @{
+                                string required = "";
+                                if (ViewBag.isUsagePeriodRequired == 1)
+                                {
+                                    required = "required";
+                                }
+                            }
+                            <div class="col-md-3">
+                                <div class="form-group ">
+                                    @Html.LabelFor(p => p.UsagePeriod, new { @class = "control-label col-md-6 "+required,id= "lblUsagePeriod" })
+
+                                    <div>
+                                        @Html.TextBoxFor(p => p.UsagePeriod, new { @class = "form-control ", @Value = (@Model.UsagePeriod == 0) ? "" : @Model.UsagePeriod.ToString() })
+                                        @Html.ValidationMessageFor(p => p.UsagePeriod, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(p => p.BusinnessPartnerId, new { @class = "control-label col-md-2 required" })
+                                    <label>(<a data-toggle="modal" data-target="#MyModal" onclick="GetLastInvoices()">سابقه حواله ها</a> )</label>
+                                    <div>
+                                        @Html.DropDownListFor(p => p.BusinnessPartnerId, Model.BusinnessPartnerList, "انتخاب طرف حساب", new { @onchange = "FillHamrahInfo()", @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.BusinnessPartnerId, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group ">
+                                    @Html.LabelFor(p => p.Describ, new { @class = "control-label col-md-6 " })
+
+                                    <div>
+                                        @Html.TextBoxFor(p => p.Describ, new { @class = "form-control " })
+                                        @Html.ValidationMessageFor(p => p.Describ, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(p => p.ReceiverFullName, new { @class = "control-label col-md-12 required" })
+                                    <div>
+                                        @Html.TextBoxFor(p => p.ReceiverFullName, new { @class = "form-control " })
+                                        @Html.ValidationMessageFor(model => model.ReceiverFullName, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group ">
+                                    @Html.LabelFor(p => p.ReceiverMobile, new { @class = "control-label col-md-12 required" })
+
+                                    <div>
+                                        @Html.TextBoxFor(p => p.ReceiverMobile, new { @class = "form-control " })
+                                        @Html.ValidationMessageFor(p => p.ReceiverMobile, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <ul class="nav nav-tabs" style="margin-bottom: 15px; margin-top: 15px;">
+                            <li class="active">
+                                <a href="#baseInfo" style="color: darkblue; margin-right: 20px;font-size: larger" data-toggle="tab">اقلام رسید</a>
+                            </li>
+                        </ul>
+                        @Html.Hidden("InvoiceDetailId", SequentialGuidGenerator.NewSequentialGuid())
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    @Html.Label("محصول", new { @class = "control-label col-md-12 required" })
+                                    <div>
+                                        @Html.DropDownList("StoreReceiptDetailId", Model.StoreReceiptList, "انتخاب محصول", new {@onchange="SetSellPrice()", @class = "form-control" })
+                                        @Html.ValidationMessage("StoreReceiptDetailId", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group ">
+                                    @Html.Label("تعداد", new { @class = "control-label col-md-12 required " })
+
+                                    <div>
+                                        @Html.TextBox("Count", "", new { @class = "form-control " })
+                                        @Html.ValidationMessage("Count", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group ">
+                                    @Html.Label("قیمت فروش", new { @class = "control-label col-md-12 required " })
+
+                                    <div>
+                                        @Html.TextBox("SellPrice", "", new {@readonly="readonly", @class = "form-control " })
+                                        @Html.ValidationMessage("SellPrice", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <hr />
+                        <button type="button" onclick="RegisterProductInInvoice();" id="btnRegProduct" value="sumbit" name="sumbit" style="margin-right: 5px; width: 150px; height: 40px; padding: 5px;" class="btn btn-primary mb-3">ثبت جدید</button>
+                        <div class="card-body p-0" id="productList">
+                            @{
+                                Html.RenderPartial("_productList", Model.ListInvoiceDetail);
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="panel-footer">
+            <div style="float: right !important; margin-right: 40px;">
+                @* ReSharper disable once UnknownCssClass *@
+                <button type="submit" autocomplete="off" onclick="AjaxForm.CustomSubmit(this, 'CreateVehicleForm')" data-loading-text="در حال ارسال اطلاعات" class="btn btn-success btn-md">
+                    ذخیره
+                </button>
+                @* ReSharper disable once UnknownCssClass *@
+                <a href="@Url.Action("Index", "Home")" class="btn btn-danger btn-md">انصراف</a>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+
+        <script language="javascript">
+
+            $("#FactorDateShamsi").persianDatepicker({
+                formatDate: "YYYY/MM/DD",
+                cellWidth: 40,
+                cellHeight: 40,
+                fontSize: 12,
+                selectedBefore: 1
+            });
+            $('#StoreReceiptDetailId').select2({
+                placeholder: 'کالا را انتخاب کنید',
+                allowClear: true
+            });
+            $('#BusinnessPartnerId').select2({
+                allowClear: true
+            });
+
+
+
+
+        </script>
+
+    </div>
+}
+

@@ -1,0 +1,371 @@
+﻿@using DrugStockWeb.Helper
+@model DrugStockWeb.ViewModels.StoreReceipt.CreateStoreReceiptViewModel
+
+@{
+    ViewBag.Title = "ثبت رسید انبار";
+}
+@using (Html.BeginForm("CreateStoreReceipt", "StoreReceipt", FormMethod.Post, new { role = "form", @class = "form-horizontal", autocomplete = "off", id = "CreateStoreReceiptForm", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(p => p.Id)
+    @Html.HiddenFor(p => p.IsNew)
+    <style>
+        .required:before {
+            content: "* ";
+            color: red;
+        }
+
+        .form-control {
+            height: 30px;
+            padding: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 5px;
+        }
+    </style>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="row">
+
+                <div class="col-md-12">
+
+                    <table class="model-state">
+                        @foreach (var item in ViewContext.ViewData.ModelState)
+                        {
+                            if (item.Value.Errors.Any())
+                            {
+                                <tr>
+                                    @if (@item.Key == "public")
+                                    {
+                                        <td>
+                                            <div class="alert alert-danger  margin-bottom-0"
+                                                 style="margin-bottom: 5px;">
+                                                @(string.Join("; ", item.Value.Errors.Select(x => x.ErrorMessage)))
+                                            </div>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        }
+                    </table>
+
+                    <br>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="panel-body">
+            @* <ul class="nav nav-tabs"> *@
+            @*     <li class="active"> *@
+            @*         <a href="#baseInfo" data-toggle="tab">اطلاعات پایه</a> *@
+            @*     </li> *@
+            @* </ul> *@
+
+
+            <div class="tab-content">
+                <div class="tab-pane active" id="baseInfo">
+                    <div class="row" style="margin-top: 15px; padding-right: 30px;font-size: smaller">
+                        <div class="row">
+                            @* @if (Model.ProductList.Count == 0) *@
+                            @* // { *@
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(p => p.StoreId, new { @class = "control-label col-md-6 required" })
+                                    <div>
+                                        @Html.DropDownListFor(p => p.StoreId, Model.StoreList, "انتخاب انبار", new { @onchange = "FillProduct()", @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.StoreId, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            @* } *@
+                            @* else *@
+                            @* { *@
+                            @*     <div class="col-md-3"> *@
+                            @*         <div class="form-group"> *@
+                            @*             @Html.LabelFor(p => p.StoreId, new { @class = "control-label col-md-6 required" }) *@
+                            @*             <div> *@
+                            @*                 @Html.DropDownListFor(p => p.StoreId, Model.StoreList, "انتخاب انبار", new { @onchange = "FillProduct()",@disabled ="disabled", @class = "form-control" }) *@
+                            @*                 @Html.ValidationMessageFor(model => model.StoreId, "", new { @class = "text-danger" }) *@
+                            @*             </div> *@
+                            @*         </div> *@
+                            @*     </div> *@
+                            @* *@
+                            @* } *@
+                            <div class="col-md-3">
+                                <div class="form-group ">
+                                    @Html.LabelFor(p => p.RequestNumber, new { @class = "control-label col-md-6 " })
+
+                                    <div>
+                                        @Html.TextBoxFor(p => p.RequestNumber, new { @class = "form-control " })
+                                        @Html.ValidationMessageFor(p => p.RequestNumber, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group ">
+                                    @Html.LabelFor(p => p.ReceiptNumber, new { @class = "control-label col-md-6 required" })
+
+                                    <div>
+                                        @Html.TextBoxFor(p => p.ReceiptNumber, new { @class = "form-control ", @readonly = true })
+                                        @Html.ValidationMessageFor(p => p.ReceiptNumber, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            @* <div class="col-md-3"> *@
+                            @*     <div class="form-group "> *@
+                            @*         @Html.LabelFor(p => p.Title, new { @class = "control-label col-md-6 " }) *@
+                            @* *@
+                            @*         <div> *@
+                            @*             @Html.TextBoxFor(p => p.Title, new { @class = "form-control " }) *@
+                            @*             @Html.ValidationMessageFor(p => p.Title, "", new { @class = "text-danger" }) *@
+                            @*         </div> *@
+                            @*     </div> *@
+                            @* </div> *@
+                            <div class="col-md-3">
+                                <div class="form-group ">
+                                    @Html.LabelFor(p => p.ReceiptDateShamsi, new { @class = "control-label col-md-6 required" })
+
+                                    <div>
+                                        @Html.TextBoxFor(p => p.ReceiptDateShamsi, new { @class = "form-control " })
+                                        @Html.ValidationMessageFor(p => p.ReceiptDateShamsi, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group ">
+                                    @Html.LabelFor(p => p.FactorNumber, new { @class = "control-label col-md-6 required" })
+
+                                    <div>
+                                        @Html.TextBoxFor(p => p.FactorNumber, new { @class = "form-control " })
+                                        @Html.ValidationMessageFor(p => p.FactorNumber, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group ">
+                                    @Html.LabelFor(p => p.FactorDateShamsi, new { @class = "control-label col-md-6 required" })
+
+                                    <div>
+                                        @Html.TextBoxFor(p => p.FactorDateShamsi, new { @class = "form-control " })
+                                        @Html.ValidationMessageFor(p => p.FactorDateShamsi, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(p => p.BusinnessPartnerId, new { @class = "control-label col-md-6 required" })
+                                    <div>
+                                        @Html.DropDownListFor(p => p.BusinnessPartnerId, Model.BusinnessPartnerList, "انتخاب طرف حساب", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.BusinnessPartnerId, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group ">
+                                    @Html.LabelFor(p => p.Describ, new { @class = "control-label col-md-6 " })
+
+                                    <div>
+                                        @Html.TextBoxFor(p => p.Describ, new { @class = "form-control " })
+                                        @Html.ValidationMessageFor(p => p.Describ, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <ul class="nav nav-tabs" style="margin-bottom: 15px; margin-top: 15px;">
+                            <li class="active">
+                                <a href="#baseInfo" style="color: darkblue; margin-right: 20px;font-size: larger" data-toggle="tab">اقلام رسید</a>
+                            </li>
+                        </ul>
+                        @Html.Hidden("StoreReceiptDetailId", SequentialGuidGenerator.NewSequentialGuid())
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    @Html.Label("محصول", new { @class = "control-label col-md-3 required" })
+                                    <div>
+                                        @Html.DropDownList("ProductId", Model.ProductList, "انتخاب محصول", new { @class = "form-control" })
+                                        @Html.ValidationMessage("ProductId", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group ">
+                                    @Html.Label("شرکت سازنده", new { @class = "control-label col-md-3 required " })
+
+                                    <div>
+                                        @Html.DropDownList("ManufactureId", Model.ManufactureList, new { @class = "form-control " })
+                                        @Html.ValidationMessage("ManufactureId", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group ">
+                                    @Html.Label("تعداد", new { @class = "control-label col-md-3 required " })
+
+                                    <div>
+                                        @Html.TextBox("Count", "", new { @class = "form-control " })
+                                        @Html.ValidationMessage("Count", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("قیمت خرید", new { @class = "control-label col-md-3 required" })
+                                    <div>
+                                        @Html.TextBox("BuyPrice", "", new { @class = "form-control", @onkeyup = "this.value = add_commas(this.value);" })
+                                        @Html.ValidationMessage("BuyPrice", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group ">
+                                    @Html.Label("قیمت فروش", new { @class = "control-label col-md-3 required " })
+
+                                    <div>
+                                        @Html.TextBox("SellPrice", "", new { @class = "form-control ", @onkeyup = "this.value = add_commas(this.value);" })
+                                        @Html.ValidationMessage("SellPrice", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    @Html.Label("بچ نامبر", new { @class = "control-label col-md-6 required" })
+                                    <div>
+                                        @Html.TextBox("BatchNumber", "", new { @class = "form-control" })
+                                        @Html.ValidationMessage("BatchNumber", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group ">
+                                    @Html.Label("نوع تاریخ", new { @class = "control-label col-md-6 required " })
+
+                                    <div>
+                                        <select class="form-control" onchange="DateTypeChange(this.value)" id="DateType" name="DateType">
+                                            <option value="miladi">میلادی</option>
+                                            <option value="shamsi">شمسی</option>
+                                        </select>
+                                        @Html.ValidationMessage("Count", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group" id="miladiExpireDate">
+                                    @Html.Label("تاریخ انقضا", new { @class = "control-label col-md-6 required " })
+                                    <div>
+                                        @* @Html.TextBox("ExpireDateMiladi", "", new { @class = "form-control " }) *@
+                                        <input type="date" class="form-control "
+                                               id="ExpireDateMiladi"
+                                               name="ExpireDateMiladi"
+                                               value="@DateTime.Now.Date.Year-@(((DateTime.Now.Date.Month.ToString().Length==1)?"0":"") + DateTime.Now.Date.Month)-@(((DateTime.Now.Date.Day.ToString().Length==1)?"0":"") + DateTime.Now.Date.Day)"
+                                               value="@(DateTime.Now.Date.Year+"-"+DateTime.Now.Date.Month+"-"+DateTime.Now.Date.Day)" />
+
+                                        @Html.ValidationMessage("ExpireDateMiladi", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group " id="shamsiExpireDate" style="display: none">
+                                    @Html.Label("تاریخ انقضا", new { @class = "control-label col-md-6 required " })
+                                    <div>
+                                        @Html.TextBox("ExpireDateShamsi", "", new { @class = "form-control " })
+                                        @Html.ValidationMessage("ExpireDateShamsi", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <hr />
+                        @if (!Model.IsConfirmed)
+                        {
+                            <button type="button" onclick="RegisterProductInReceipt();" id="btnRegProduct" value="sumbit" name="sumbit" style="margin-right: 5px; width: 150px; height: 40px; padding: 5px;" class="btn btn-primary mb-3">ثبت جدید</button>
+                        }
+                        else
+                        {
+                            <button type="button" onclick="RegisterReturnInReceipt();" id="btnRegProduct" value="sumbit" name="sumbit" style="margin-right: 5px; width: 150px; height: 40px; padding: 5px;display: none" class="btn btn-primary mb-3">ثبت جدید</button>
+                        }
+                        <div class="card-body p-0" id="productList">
+                            @{
+                                Html.RenderPartial("_productList", Model.ListStoreReceiptDetail);
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="panel-footer">
+            <div style="float: right !important; margin-right: 40px;">
+                @* ReSharper disable once UnknownCssClass *@
+                @if (!Model.IsConfirmed)
+                {
+                    <button type="submit" autocomplete="off" onclick="AjaxForm.CustomSubmit(this, 'CreateVehicleForm')" data-loading-text="در حال ارسال اطلاعات" class="btn btn-success btn-md">
+                        ذخیره
+                    </button>
+                }
+                @* ReSharper disable once UnknownCssClass *@
+                <a href="@Url.Action("StoreReceiptList", "StoreReceipt")" class="btn btn-danger btn-md">انصراف</a>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+
+        <script language="javascript">
+
+
+            $("#ExpireDateShamsi").persianDatepicker({
+                formatDate: "YYYY/MM/DD",
+                cellWidth: 40,
+                cellHeight: 40,
+                fontSize: 12,
+                selectedBefore: 1
+            });
+            $("#ReceiptDateShamsi").persianDatepicker({
+                formatDate: "YYYY/MM/DD",
+                cellWidth: 40,
+                cellHeight: 40,
+                fontSize: 12,
+                selectedBefore: 1
+            });
+            $("#FactorDateShamsi").persianDatepicker({
+                formatDate: "YYYY/MM/DD",
+                cellWidth: 40,
+                cellHeight: 40,
+                fontSize: 12,
+                selectedBefore: 1
+            });
+            $('#ProductId').select2({
+                placeholder: 'کالا را انتخاب کنید',
+                allowClear: true
+            });
+            $('#ManufactureId').select2({
+                placeholder: 'شرکت سازنده را انتخاب کنید',
+                allowClear: true
+            });
+            $('#DropDownProvinceId').select2({
+                placeholder: 'فروشنده را انتخاب کنید',
+                allowClear: true
+            });
+
+
+
+
+        </script>
+
+    </div>
+}
+
