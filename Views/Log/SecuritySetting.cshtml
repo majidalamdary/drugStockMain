@@ -1,0 +1,219 @@
+﻿@using DrugStockWeb.Helper
+@using DrugStockWeb.Models.Constancts
+@using Microsoft.AspNet.Identity
+@model DrugStockWeb.Models.Common.SecuritySetting   
+
+
+@{
+    ViewBag.Title = "تنظیمات لاگ";
+}
+
+@using (Html.BeginForm("SecuritySetting", "Log", FormMethod.Post, new { role = "form", @class = "form-horizontal", autocomplete = "off", id = "CreateStoreForm", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <style>
+        .required:before {
+            content: "* ";
+            color: red;
+        }
+    </style>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="row">
+
+                <div class="col-md-12">
+
+                    <table class="model-state">
+                        @foreach (var item in ViewContext.ViewData.ModelState)
+                        {
+                            if (item.Value.Errors.Any())
+                            {
+                                <tr>
+                                    @if (@item.Key == "public")
+                                    {
+                                        <td>
+                                            <div class="alert alert-danger  margin-bottom-0"
+                                                 style="margin-bottom: 5px;">
+                                                @(string.Join("; ", item.Value.Errors.Select(x => x.ErrorMessage)))
+                                            </div>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        }
+                    </table>
+
+                    <br>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="panel-body">
+            @* <ul class="nav nav-tabs"> *@
+            @*     <li class="active"> *@
+            @*         <a href="#baseInfo" data-toggle="tab">اطلاعات پایه</a> *@
+            @*     </li> *@
+            @* </ul> *@
+
+
+            <div class="tab-content">
+                <div class="tab-pane active" id="baseInfo">
+                    <div class="row" style="margin-top: 15px; padding-right: 30px;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group ">
+                                    @Html.LabelFor(p => p.FailedLoginMaxTryingTime, new { @class = "control-label col-md-5 required" })
+
+                                    <div>
+                                        @Html.TextBoxFor(p => p.FailedLoginMaxTryingTime, new { @class = "form-control " })
+                                        @Html.ValidationMessageFor(p => p.FailedLoginMaxTryingTime, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div class="col-md-6">
+                                <div class="form-group ">
+                                    @Html.LabelFor(p => p.ActiveUserAfterTimePeriodByMinutes, new { @class = "control-label col-md-5 required" })
+
+                                    <div>
+                                        @Html.TextBoxFor(p => p.ActiveUserAfterTimePeriodByMinutes, new { @class = "form-control " })
+                                        @Html.ValidationMessageFor(p => p.ActiveUserAfterTimePeriodByMinutes, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group ">
+                                    @Html.LabelFor(p => p.MinPasswordLength, new { @class = "control-label col-md-5 required" })
+
+                                    <div>
+                                        @Html.TextBoxFor(p => p.MinPasswordLength, new { @class = "form-control " })
+                                        @Html.ValidationMessageFor(p => p.MinPasswordLength, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group ">
+                                    @Html.LabelFor(p => p.LogMaximumRecordCount, new { @class = "control-label col-md-5 required" })
+
+                                    <div>
+                                        @Html.TextBoxFor(p => p.LogMaximumRecordCount, new { @class = "form-control " })
+                                        @Html.ValidationMessageFor(p => p.LogMaximumRecordCount, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group ">
+                                    @Html.LabelFor(p => p.LogThresholdPercentage, new { @class = "control-label col-md-5 required" })
+
+                                    <div>
+                                        @Html.TextBoxFor(p => p.LogThresholdPercentage, new { @class = "form-control " })
+                                        @Html.ValidationMessageFor(p => p.LogThresholdPercentage, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(p => p.Active2Fa, new { @class = "control-label col-md-5 required" })
+
+                                    <div>
+                                        @Html.DropDownListFor(p => p.Active2Fa,
+                                            new SelectList(new[]
+                                            {
+                                                new { Value = "true", Text = "بله" },
+                                                new { Value = "false", Text = "خیر" }
+                                            }, "Value", "Text", Model.Active2Fa.ToString().ToLower()),
+                                            new { @class = "form-control" })
+
+                                        @Html.ValidationMessageFor(p => p.Active2Fa, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>        
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    @Html.LabelFor(p => p.LogOutInActiveSession, new { @class = "control-label col-md-5 required" })
+
+                                    <div>
+                                        @Html.TextBoxFor(p => p.LogOutInActiveSession, new { @class = "form-control col-md-6" })
+
+                                        @Html.ValidationMessageFor(p => p.LogOutInActiveSession, "", new { @class = "text-danger  " })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group ">
+                                    @Html.LabelFor(p => p.UseLowerCaseInPassword, new { @class = "control-label col-md-5 required" })
+
+                                    <div>
+                                        @Html.CheckBoxFor(p => p.UseLowerCaseInPassword, new { @class = " " })
+                                        @Html.ValidationMessageFor(p => p.UseLowerCaseInPassword, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group ">
+                                    @Html.LabelFor(p => p.UseUpperCaseInPassword, new { @class = "control-label col-md-5 required" })
+
+                                    <div>
+                                        @Html.CheckBoxFor(p => p.UseUpperCaseInPassword, new { @class = " " })
+                                        @Html.ValidationMessageFor(p => p.UseUpperCaseInPassword, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group ">
+                                    @Html.LabelFor(p => p.UseNumbersInPassword, new { @class = "control-label col-md-5 required" })
+
+                                    <div>
+                                        @Html.CheckBoxFor(p => p.UseNumbersInPassword, new { @class = " " })
+                                        @Html.ValidationMessageFor(p => p.UseNumbersInPassword, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group ">
+                                    @Html.LabelFor(p => p.UseSpecialCharactersInPassword, new { @class = "control-label col-md-5 required" })
+
+                                    <div>
+                                        @Html.CheckBoxFor(p => p.UseSpecialCharactersInPassword, new { @class = " " })
+                                        @Html.ValidationMessageFor(p => p.UseSpecialCharactersInPassword, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="panel-footer">
+            <div style="float: right !important; margin-right: 40px;">
+                @if (PermissionHelper.HasPermission(PermissionValue.ChangeSecuritySetting, User.Identity.GetUserId()))
+                {
+                    <button type="submit" autocomplete="off" onclick="AjaxForm.CustomSubmit(this, 'CreateVehicleForm')" data-loading-text="در حال ارسال اطلاعات" class="btn btn-success btn-md">
+                        ذخیره
+                    </button>
+                }
+                <a href="@Url.Action("Index", "Home")" class="btn btn-primary btn-md">انصراف</a>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+
+
+    </div>
+    {
+        Html.RenderPartial("_sweetAlert");
+    }
+
+
+}

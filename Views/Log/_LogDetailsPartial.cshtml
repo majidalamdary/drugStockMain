@@ -1,0 +1,13 @@
+﻿@using DrugStockWeb.Utitlities
+@model DrugStockWeb.Models.LogSystem.Logs
+
+<div>
+    <p><strong>ایجاد کننده:</strong> @Model.Creator</p>
+    <p><strong>نوع لاگ:</strong> @Model.LogType.Title</p>
+    <p><strong>تاریخ و ساعت:</strong> @Model.LogDateTime.ToShamsi(PersianDateTimeFormat.DateTime)</p>
+    <p><strong>IP:</strong> @Model.IPAddress</p>
+    <p><strong>وضعیت:</strong> @(Model.LogStatus ? "موفق" : "ناموفق")</p>
+    <p><strong>توضیحات:</strong> @Model.Description</p>
+    <p><strong>مقدار قبلی:</strong> @Model.OldValue</p>
+    <p><strong>مقدار فعلی:</strong> @Model.NewValue</p>
+</div>

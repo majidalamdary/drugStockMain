@@ -1,0 +1,109 @@
+﻿@using DrugStockWeb.Helper
+@using DrugStockWeb.Models.Constanct
+@using DrugStockWeb.Models.Constancts
+@using DrugStockWeb.Utitlities
+@using Microsoft.AspNet.Identity
+@model List<DrugStockWeb.Models.LogSystem.Logs>
+@if (ViewBag.ErrorMessage != null)
+{
+    <div style="color: red">
+        <span>@ViewBag.ErrorMessage</span>
+    </div>
+}
+<div class="card-body p-0">
+    <table class="table table-striped table-responsive-sm text-center">
+        <thead>
+            <tr>
+                <th>کد</th>
+                <th>ایجاد کننده</th>
+                <th>نوع لاگ</th>
+                <th>تاریخ و ساعت لاگ</th>
+                <th>آدرس کاربر</th>
+                <th>وضعیت</th>
+                <th>مشاهده</th>
+            </tr>
+        </thead>
+        <tbody>
+        
+        @{
+                // var r = (ViewBag.pageSize) * (ViewBag.Page-1);
+                var r = (ViewBag.RecordCount- (ViewBag.pageSize) * (ViewBag.Page - 1))+ 1;
+            }
+            @foreach (var item in Model)
+            {
+                r--;
+            <tr>
+                <td>@r</td>
+                <td>@(item.Creator)</td>
+                <td>@(item.LogType.Title)</td>
+                <td>@item.LogDateTime.ToShamsi(PersianDateTimeFormat.DateShortTime)</td>
+                <td>@(item.IPAddress)</td>
+                <td>@(item.LogStatus ? "موفق" : "ناموفق")</td>
+                <td>
+                    <button class="btn btn-sm btn-info" onclick="showLogDetails('@item.Id')">مشاهده</button>
+                </td>
+                @* <td>@(item.Description )</td> *@
+
+            </tr>
+        }
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-center">
+        <nav class="table-responsive">
+            <ul class="pagination justify-content-center d-flex flex-wrap">
+                
+                @if (ViewBag.Page > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" onclick="SearchLogs(1)">اولین</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" onclick="SearchLogs(@(ViewBag.Page - 1))">قبلی</a>
+                    </li>
+                }
+                @{
+                    var maxPageCount = ViewBag.Page;
+                    var l = 1;
+                    for (int i = ViewBag.Page; i <= ViewBag.PageCount; i++)
+                    {
+                        maxPageCount = i;
+                        l++;
+                        if(l>5)
+                        {
+                            break;
+                        }
+
+                    }
+                }
+
+                @for (int i = (ViewBag.Page>2? ViewBag.Page-2 : 1); i <=  maxPageCount; i++)
+
+                {
+                    <li class="page-item @(i == ViewBag.Page ? "active" : "")">
+                        <a class="page-link" onclick="SearchLogs(@i);">@i</a>
+                    </li>
+                }
+
+                @if (ViewBag.Page < ViewBag.PageCount)
+                {
+                    <li class="page-item">
+                        <a class="page-link" onclick="SearchLogs(@(ViewBag.Page + 1))">بعدی</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" onclick="SearchLogs(@(ViewBag.PageCount))">آخرین</a>
+                    </li>
+                }
+
+            </ul>
+            <div style="text-align: center">
+                @((ViewBag.RecordCount>=10)?10: ViewBag.RecordCount)
+                ردیف از
+                @ViewBag.RecordCount
+                رکورد
+            </div>
+        </nav>
+    </div>
+
+
+</div>
+
