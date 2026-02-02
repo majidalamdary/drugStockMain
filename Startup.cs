@@ -15,7 +15,7 @@ namespace DrugStockWeb
         public void Configuration(IAppBuilder app)
         {
              
-            ConfigureAuth(app);  ////wefwef//123415623e23
+            ConfigureAuth(app);  ////wefwef//123415623e23123
 
         }
 
