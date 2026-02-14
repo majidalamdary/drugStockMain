@@ -119,10 +119,10 @@ function FillProduct() {
             GetReceiptNumber(storeId);
         },
         failure: function (response) {
-            //            alert(response.responseText);
+            //             
         },
         error: function (response) {
-            //            alert(response.responseText);
+            //             
         }
     });
 }
@@ -145,10 +145,10 @@ function GetReceiptNumber(storeId) {
             //            $("#ProductId").append('<option value>' + "انتخاب شهر" + '</option>');
         },
         failure: function (response) {
-            //            alert(response.responseText);
+            //             
         },
         error: function (response) {
-            //            alert(response.responseText);
+            //             
         }
     });
 
@@ -185,10 +185,10 @@ function FillStoreReceipt() {
 
         },
         failure: function (response) {
-            //            alert(response.responseText);
+            //             
         },
         error: function (response) {
-            //            alert(response.responseText);
+            //             
         }
     });
 }
@@ -217,10 +217,10 @@ function GetStoreIsUsagePeriodForce(val) {
             GetLastInvoiceNumber(val);
         },
         failure: function (response) {
-            //            alert(response.responseText);
+            //             
         },
         error: function (response) {
-            //            alert(response.responseText);
+            //             
         }
     });
 }
@@ -244,10 +244,10 @@ function GetLastInvoiceNumber(val) {
 
         },
         failure: function (response) {
-            //            alert(response.responseText);
+            //             
         },
         error: function (response) {
-            //            alert(response.responseText);
+            //             
         }
     });
 }
@@ -315,10 +315,10 @@ function SearchStore(page) {
 
         },
         failure: function (response) {
-            //            alert(response.responseText);
+            //             
         },
         error: function (response) {
-            //            alert(response.responseText);
+            //             
         }
     });
 
@@ -362,10 +362,10 @@ function SearchStoreReceipt(page) {
 
         },
         failure: function (response) {
-            //            alert(response.responseText);
+            //             
         },
         error: function (response) {
-            //            alert(response.responseText);
+            //             
         }
     });
 
@@ -402,10 +402,10 @@ function SearchStoreReceipt(page) {
 
         },
         failure: function (response) {
-            //            alert(response.responseText);
+            //             
         },
         error: function (response) {
-            //            alert(response.responseText);
+            //             
         }
     });
 
@@ -443,10 +443,10 @@ function SearchProductBalance(page) {
 
         },
         failure: function (response) {
-            //            alert(response.responseText);
+            //             
         },
         error: function (response) {
-            //            alert(response.responseText);
+            //             
         }
     });
 
@@ -490,10 +490,10 @@ function SearchReceiptReport(page) {
 
         },
         failure: function (response) {
-            //            alert(response.responseText);
+            //             
         },
         error: function (response) {
-            //            alert(response.responseText);
+            //             
         }
     });
 
@@ -537,10 +537,10 @@ function SearchInvoiceReport(page) {
 
         },
         failure: function (response) {
-            //            alert(response.responseText);
+            //             
         },
         error: function (response) {
-            //            alert(response.responseText);
+            //             
         }
     });
 
@@ -599,10 +599,10 @@ function SearchDisposableProductBalance(page) {
 
         },
         failure: function (response) {
-            //            alert(response.responseText);
+            //             
         },
         error: function (response) {
-            //            alert(response.responseText);
+            //             
         }
     });
 
@@ -650,10 +650,10 @@ function SearchInvoice(page) {
 
         },
         failure: function (response) {
-            //            alert(response.responseText);
+            //             
         },
         error: function (response) {
-            //            alert(response.responseText);
+            //             
         }
     });
 
@@ -710,10 +710,10 @@ function SearchLogs(page) {
 
         },
         failure: function (response) {
-            //            alert(response.responseText);
+            //             
         },
         error: function (response) {
-            //            alert(response.responseText);
+            //             
         }
     });
 
@@ -751,10 +751,10 @@ function SearchInvoiceReturn(page) {
 
         },
         failure: function (response) {
-            //            alert(response.responseText);
+            //             
         },
         error: function (response) {
-            //            alert(response.responseText);
+            //             
         }
     });
 
@@ -792,10 +792,10 @@ function SearchUser(page) {
 
         },
         failure: function (response) {
-            //            alert(response.responseText);
+            //             
         },
         error: function (response) {
-            //            alert(response.responseText);
+            //             
         }
     });
 
@@ -834,10 +834,10 @@ function SearchProductGroup(page) {
 
         },
         failure: function (response) {
-            //            alert(response.responseText);
+            //             
         },
         error: function (response) {
-            //            alert(response.responseText);
+            //             
         }
     });
 
@@ -876,10 +876,10 @@ function SearchProductSubGroup(page) {
 
         },
         failure: function (response) {
-            //            alert(response.responseText);
+            //             
         },
         error: function (response) {
-            //            alert(response.responseText);
+            //             
         }
     });
 
@@ -983,10 +983,10 @@ function SearchBusinnessPartnerGroup(page) {
 
         },
         failure: function (response) {
-            alert(response.responseText);
+             
         },
         error: function (response) {
-            alert(response.responseText);
+             
         }
     });
 
@@ -1031,10 +1031,10 @@ function SearchBusinnessPartner(page) {
 
         },
         failure: function (response) {
-            alert(response.responseText);
+            Swal.close();
         },
         error: function (response) {
-            alert(response.responseText);
+            Swal.close();
         }
     });
 
@@ -1072,10 +1072,10 @@ function SearchManufacture(page) {
 
         },
         failure: function (response) {
-            //            alert(response.responseText);
+            //             
         },
         error: function (response) {
-            //            alert(response.responseText);
+            //             
         }
     });
 
@@ -1119,10 +1119,10 @@ function SearchProduct(page) {
 
         },
         failure: function (response) {
-            //            alert(response.responseText);
+            //             
         },
         error: function (response) {
-            //            alert(response.responseText);
+            //             
         }
     });
 
@@ -1390,11 +1390,11 @@ function RegisterProductInInvoice() {
         },
         failure: function (response) {
             Swal.close();
-            alert(response.responseText);
+             
         },
         error: function (response) {
             Swal.close();
-            alert(response.responseText);
+             
         }
     });
 }
@@ -1450,11 +1450,11 @@ function UpdateStoreReceiptDetail(val) {
         },
         failure: function (response) {
             Swal.close();
-            alert(response.responseText);
+             
         },
         error: function (response) {
             Swal.close();
-            alert(response.responseText);
+             
         }
     });
 }
@@ -1490,11 +1490,11 @@ function DeleteStoreReceiptDetail(val) {
             },
             failure: function (response) {
                 Swal.close();
-                alert(response.responseText);
+                 
             },
             error: function (response) {
                 Swal.close();
-                alert(response.responseText);
+                 
             }
         });
     }
@@ -1658,11 +1658,11 @@ function UpdateInvoiceDetail(val) {
         },
         failure: function (response) {
             Swal.close();
-            alert(response.responseText);
+             
         },
         error: function (response) {
             Swal.close();
-            alert(response.responseText);
+             
         }
     });
 }
@@ -1698,11 +1698,11 @@ function DeleteInvoiceDetail(val) {
             },
             failure: function (response) {
                 Swal.close();
-                alert(response.responseText);
+                 
             },
             error: function (response) {
                 Swal.close();
-                alert(response.responseText);
+                 
             }
         });
     }

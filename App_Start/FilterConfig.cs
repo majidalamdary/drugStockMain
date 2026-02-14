@@ -7,7 +7,7 @@ namespace DrugStockWeb
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
-            filters.Add(new HandleErrorAttribute());
+            //filters.Add(new HandleErrorAttribute());
             filters.Add(new NoCacheAttribute()); // <-- Add this line
             filters.Add(new ValidateHttpMethodAttribute { AllowedMethods = new[] { "GET", "POST" } });
 

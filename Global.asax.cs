@@ -30,6 +30,7 @@ namespace StudentCourseManagement
 
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            MvcHandler.DisableMvcResponseHeader = true;
             //Database.SetInitializer<MyDbContext>(null);
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<MainDbContext, Configuration>());
             
